@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PokemonTCG</name>
+    </assembly>
+    <members>
+        <member name="M:PokemonTCG.Player.draw(System.Int32)">
+            <summary>
+            Takes the top card from the deck and passes it to the calling method.
+            </summary>
+        </member>
+        <member name="M:PokemonTCG.Player.discard">
+            <summary>
+            Puts the card that was passed in into the discarded array.
+            </summary>
+        </member>
+    </members>
+</doc>

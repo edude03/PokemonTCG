@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PokemonTCG</name>
+    </assembly>
+    <members>
+        <member name="M:PokemonTCG.Card.#ctor(System.Int32)">
+            <summary>
+            The Constructor for Card,
+            </summary>
+            <param name="BOGUS_ID">Bogus_ID is the ID value associated with a card in the 
+            database</param>
+        </member>
+        <member name="F:PokemonTCG.Player.Hand">
+            Card arrays, write encapsulated methods for possibly
+        </member>
+        <member name="M:PokemonTCG.Player.#ctor(System.String)">
+            <summary>
+            Creates a new "player", sets the name, Loads the players deck
+            Shuffles it 7 times, and adds 7 cards to it
+            </summary>
+            <param name="name">The Name of the player</param>
+        </member>
+        <member name="M:PokemonTCG.Player.draw(System.Int32)">
+            <summary>
+            Takes the top card from the deck and passes it to the calling method.
+            </summary>
+            
+        </member>
+        <member name="M:PokemonTCG.Player.draw">
+            <summary>
+            Calls the deck 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PokemonTCG.Player.getLastCard">
+            <summary>
+            Returns the last card that was added to the List so that information 
+            may be extracted from it
+            </summary>
+            <returns>The last card drawn</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.discard">
+            <summary>
+            Puts the card that was passed in into the discarded array.
+            </summary>
+        </member>
+        <member name="M:PokemonTCG.Player.DiscardHand">
+            <summary>
+            Removes all cards from the hand List
+            </summary>
+        </member>
+        <member name="M:PokemonTCG.Player.getName">
+            <summary>
+            Ecapsulated method
+            </summary>
+            <returns>The players name</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.chooseCard">
+            <summary>
+            Allows the user to choose a card from the hand List
+            </summary>
+            <returns>The choosen Card</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.chooseCard(System.Collections.Generic.List{PokemonTCG.Card})">
+            <summary>
+            Presents a menu with the availible cards in the source list
+            </summary>
+            <param name="source">A List</param>
+            <returns>A card</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.chooseCard(System.Int32)">
+            <summary>
+            Check if the card the calling method wants is valid,
+            if it is, the card is removed from the source list and
+            returned
+            </summary>
+            <param name="index">The index of the card in question</param>
+            <returns>The chosen card or null if there is an error</returns>
+        </member>
+        <member name="M:PokemonTCG.LuaEngine.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+    </members>
+</doc>

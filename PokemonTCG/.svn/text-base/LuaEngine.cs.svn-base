@@ -1,0 +1,240 @@
+using System;
+using System.Reflection;
+using System.Collections;
+using System.Text;
+using System.ComponentModel;
+using LuaInterface;
+using PokemonTCG.Structs;
+
+namespace PokemonTCG
+{
+    class LuaEngine
+    {
+        static Lua pLuaVM = null;
+        bool bRunning = true;
+        static Hashtable pLuaFuncs = null;
+        static Hashtable pLuaPackages = null;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public LuaEngine()
+        {
+            pLuaVM = new Lua();
+            pLuaFuncs = new Hashtable();
+            pLuaPackages = new Hashtable();
+            registerLuaFunctions(null, this, null);
+            Console.WriteLine("CSharp Lua Console v0.1");
+        }
+
+        public static void registerLuaFunctions(String strPackage, Object pTarget, String strPkgDoc)
+        {
+            if (pLuaVM == null || pLuaFuncs == null || pLuaPackages == null)
+                return;
+
+            LuaPackageDescriptor pPkg = null;
+            
+            if (strPackage != null)
+            {
+                pLuaVM.DoString(strPackage + " = {}");
+                pPkg = new LuaPackageDescriptor(strPackage, strPkgDoc);
+            }
+
+            Type pTrgType = pTarget.GetType();
+
+            foreach (MethodInfo mInfo in pTrgType.GetMethods())
+            {
+                foreach (Attribute attr in Attribute.GetCustomAttributes(mInfo))
+                {
+                    if (attr.GetType() == typeof(AttrLuaFunc))
+                    {
+                        AttrLuaFunc pAttr = (AttrLuaFunc) attr;
+                        ArrayList pParams = new ArrayList();
+                        ArrayList pParamDocs = new ArrayList();
+                        String strFName = pAttr.getFuncName();
+                        String strFDoc = pAttr.getFuncDoc();
+                        String[] pPrmDocs = pAttr.getFuncParams();
+                        ParameterInfo[] pPrmInfo = mInfo.GetParameters();
+                        if (pPrmDocs != null && (pPrmInfo.Length != pPrmDocs.Length))
+                        {
+                            Console.WriteLine("Function " + mInfo.Name + " (exported as " + strFName + ") argument number mismatch. Declared " + pPrmDocs.Length + " but requires " + pPrmInfo.Length + ".");
+                            break;
+                        }
+
+                        for (int i = 0; i < pPrmInfo.Length; i++)
+                        {
+                            pParams.Add(pPrmInfo[i].Name);
+                            pParamDocs.Add(pPrmDocs[i]);
+                        }
+
+                        LuaFuncDescriptor pDesc = new LuaFuncDescriptor(strFName, strFDoc, pParams, pParamDocs);
+                        if (pPkg != null)
+                        {
+                            pPkg.AddFunc(pDesc);
+                            pLuaVM.RegisterFunction(strPackage + strFName, pTarget, mInfo);
+                            pLuaVM.DoString(strPackage + "." + strFName + " = " + strPackage + strFName);
+                            pLuaVM.DoString(strPackage + strFName + " = nil");
+                        }
+                        else
+                        {
+                            pLuaFuncs.Add(strFName, pDesc);
+                            pLuaVM.RegisterFunction(strFName, pTarget, mInfo);
+                        }
+                    }
+                }
+            }
+
+            if (pPkg != null)
+                pLuaPackages.Add(strPackage, pPkg);
+        }
+
+        [AttrLuaFunc("quit", "Exit the program.")]
+        public void quit()
+        {
+            bRunning = false;
+        }
+
+        [AttrLuaFunc("helpcmd", "Show help for a given command or package", "Command / Package to get help of.")]
+        public void help(String strCmd)
+        {
+            if (pLuaFuncs.ContainsKey(strCmd))
+            {
+                LuaFuncDescriptor pDesc = (LuaFuncDescriptor)pLuaFuncs[strCmd];
+                Console.WriteLine(pDesc.getFuncFullDoc());
+                return;
+            }
+
+            if (strCmd.IndexOf(".") == -1)
+            {
+                if (pLuaPackages.ContainsKey(strCmd))
+                {
+                    LuaPackageDescriptor pDesc = (LuaPackageDescriptor)pLuaPackages[strCmd];
+                    pDesc.WriteHelp();
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("No such function or package: " + strCmd);
+                    return;
+                }
+            }
+
+            String[] strParts = strCmd.Split('.');
+
+            if (!pLuaPackages.ContainsKey(strParts[0]))
+            {
+                Console.WriteLine("No such function or package: " + strCmd);
+                return;
+            }
+
+            LuaPackageDescriptor pPkgDesc = (LuaPackageDescriptor)pLuaPackages[strParts[0]];
+
+            if (!pPkgDesc.HasFunc(strParts[1]))
+            {
+                Console.WriteLine("Package " + strParts[0] + " doesn't have a " + strParts[1] + " function.");
+                return;
+            }
+
+            pPkgDesc.WriteHelp(strParts[1]);
+        }
+
+        [AttrLuaFunc("help", "List available commands.")]
+        public void help()
+        {
+            Console.WriteLine("Available commands: ");
+            Console.WriteLine();
+
+            IDictionaryEnumerator Funcs = pLuaFuncs.GetEnumerator();
+            while (Funcs.MoveNext())
+            {
+                Console.WriteLine(((LuaFuncDescriptor)Funcs.Value).getFuncHeader());
+            }
+
+            if (pLuaPackages.Count > 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Available packages: ");
+
+                IDictionaryEnumerator Pkgs = pLuaPackages.GetEnumerator();
+                while (Pkgs.MoveNext())
+                {
+                    Console.WriteLine((String) Pkgs.Key);
+                }
+            }
+        }
+
+        public void run()
+        {
+            String strBuffer = "";
+            Boolean bInBlock = false;
+
+            while (bRunning)
+            {
+                if (!bInBlock)
+                    Console.Write("> ");
+                else
+                    Console.Write(": ");
+
+                String strConsoleIn = Console.ReadLine();
+                if (!bInBlock && strConsoleIn == "beginblock")
+                {
+                    bInBlock = true;
+                }
+                else if (bInBlock && strConsoleIn == "breakblock")
+                {
+                    bInBlock = false;
+                    strBuffer = "";
+                    Console.WriteLine();
+                }
+                else if (bInBlock && strConsoleIn == "endblock")
+                {
+                    bInBlock = false;
+                    try
+                    {
+                        Console.WriteLine();
+                        pLuaVM.DoString(strBuffer);
+                        Console.WriteLine();
+                    }
+
+                    catch (Exception Ex)
+                    {
+                        Console.WriteLine(Ex.Message);
+                        Console.WriteLine();
+                    }
+
+                    finally
+                    {
+                        strBuffer = "";
+                    }
+                }
+                else if (bInBlock)
+                {
+                    strBuffer += strConsoleIn + "\n";
+                }
+                else
+                {
+                    try
+                    {
+                        Console.WriteLine();
+                        pLuaVM.DoString(strConsoleIn);
+                        Console.WriteLine();
+                    }
+
+                    catch (Exception Ex)
+                    {
+                        Console.WriteLine(Ex.Message);
+                        Console.WriteLine();
+                    }
+                }
+            }
+        }
+
+        /*
+        static void Main(string[] args)
+        {
+            Program pMain = new Program();
+            pMain.run();
+        }
+         * */
+    }
+}

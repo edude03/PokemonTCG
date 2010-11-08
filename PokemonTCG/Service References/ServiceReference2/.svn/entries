@@ -1,0 +1,64 @@
+10
+
+dir
+0
+https://setsuna:8443/svn/PokemonTCG/PokemonTCG/Service%20References/ServiceReference2
+https://setsuna:8443/svn/PokemonTCG
+add
+
+Service11.xsd
+file
+
+
+
+add
+
+Service12.xsd
+file
+
+
+
+add
+
+Reference.cs
+file
+
+
+
+add
+
+PokemonTCG.ServiceReference2.CompositeType.datasource
+file
+
+
+
+add
+
+Reference.svcmap
+file
+
+
+
+add
+
+Service1.wsdl
+file
+
+
+
+add
+
+configuration.svcinfo
+file
+
+
+
+add
+
+Service1.xsd
+file
+
+
+
+add
+

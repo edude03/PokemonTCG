@@ -1,0 +1,32 @@
+C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\bin\Debug\PokemonTCG.exe
+C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\bin\Debug\PokemonTCG.pdb
+C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\obj\Debug\PokemonTCG.exe
+C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\obj\Debug\PokemonTCG.pdb
+C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\bin\Debug\Doc.xml
+C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\bin\Debug\lua51.dll
+C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\bin\Debug\C5.pdb
+C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\bin\Debug\PokemonTCG.exe.config
+E:\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG1\PokemonTCG\bin\Debug\PokemonTCG.exe.config
+E:\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG1\PokemonTCG\obj\Debug\PokemonTCG.exe
+E:\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG1\PokemonTCG\obj\Debug\PokemonTCG.pdb
+E:\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG1\PokemonTCG\bin\Debug\PokemonTCG.exe
+E:\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG1\PokemonTCG\bin\Debug\PokemonTCG.pdb
+E:\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG1\PokemonTCG\bin\Debug\Doc.xml
+E:\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG1\PokemonTCG\bin\Debug\lua51.dll
+E:\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG1\PokemonTCG\bin\Debug\C5.pdb
+E:\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG1\PokemonTCG\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Michael\Documents\PokemonTCG1\PokemonTCG\bin\Debug\PokemonTCG.exe.config
+C:\Users\Michael\Documents\PokemonTCG1\PokemonTCG\obj\Debug\PokemonTCG.exe
+C:\Users\Michael\Documents\PokemonTCG1\PokemonTCG\obj\Debug\PokemonTCG.pdb
+C:\Users\Michael\Documents\PokemonTCG1\PokemonTCG\bin\Debug\PokemonTCG.exe
+C:\Users\Michael\Documents\PokemonTCG1\PokemonTCG\bin\Debug\PokemonTCG.pdb
+C:\Users\Michael\Documents\PokemonTCG1\PokemonTCG\bin\Debug\Doc.xml
+C:\Users\Michael\Documents\PokemonTCG1\PokemonTCG\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Sandland\Downloads\PokemonTCG1\PokemonTCG\bin\Debug\PokemonTCG.exe.config
+C:\Users\Sandland\Downloads\PokemonTCG1\PokemonTCG\obj\Debug\PokemonTCG.exe
+C:\Users\Sandland\Downloads\PokemonTCG1\PokemonTCG\obj\Debug\PokemonTCG.pdb
+C:\Users\Sandland\Downloads\PokemonTCG1\PokemonTCG\bin\Debug\PokemonTCG.exe
+C:\Users\Sandland\Downloads\PokemonTCG1\PokemonTCG\bin\Debug\PokemonTCG.pdb
+C:\Users\Sandland\Downloads\PokemonTCG1\PokemonTCG\bin\Debug\Doc.xml
+C:\Users\Sandland\Downloads\PokemonTCG1\PokemonTCG\obj\Debug\ResolveAssemblyReference.cache

@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.CompilerServices;
-using Microsoft.VisualBasic;
 using System.Data.OleDb;
 using System.Data;
+
+
+//Remove visualbasic code in the furture
 using Microsoft.VisualBasic.CompilerServices;
+using Microsoft.VisualBasic;
 
 //using PokemonTCG.
 
@@ -169,8 +172,17 @@ namespace PokemonTCG
         {
             foreach (Pair i in specs)
             {
-                //**** I wish I remembered what this code does : /
-                if (!(attached.FindAll(delegate(Card c) { return c.type == i.type; }).Count >= i.value))
+				
+				/* This code finds all instances of Card, then Findall uses a delegate to compare wethere or not the found card is equal to 
+				 * the requested requirement. Now we take a count of the returned vaules and if that value is not greater than or equal to 
+				 * the number of cards we need we return false. 
+				 * 
+				 * If you noticed that this is run in a foreach loop, it is because we need to evaluate wheather or not all requirements are met 
+				 * for example if 2 water and 5 leaf are needed, we evaluate the number of cards that are leaf and see if its enough then we evaluate
+				 * wether or not there are enough water to meet the requirements. If both checks pass the loop exists with a return true */
+				if (!(attached.FindAll(delegate(Card c) { return c.type == i.type; }).Count >= i.value))
+					//FindAll the cards; pass them into the delegate for matching; compare the number of results 
+					//to the number required (passed in via params pair (which is the number (i) of type (type) required. 
                 {
                     return false;
                 }

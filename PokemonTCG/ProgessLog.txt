@@ -28,4 +28,5 @@
 [11/17/10] Note: There is a lot missing that should be in the SVN logs that were lost :(
 		   Changed database from access to Mongo
 		   Cleaned up Card instanation code
+		   TODO: Push decks, game configuration and stuff to the Database later. 
 		   

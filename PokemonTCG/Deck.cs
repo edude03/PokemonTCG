@@ -4,12 +4,12 @@ using System.Text;
 using System.IO;
 using Microsoft.VisualBasic;
 using MongoDB;
+
 namespace PokemonTCG
 {
     
     public class Deck
     {
-        Random rnd = new Random();
         private Card[] deck;
 
         //Variables

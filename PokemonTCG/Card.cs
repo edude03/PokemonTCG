@@ -21,7 +21,7 @@ namespace PokemonTCG
 
         //Variables.
         //Since this code wasn't designed with encapsulation in mind, all the 
-        //variables are public, however this will be changed later.
+        //variables are public, however this should be changed later.
 
         public int BOGUS_ID;
         public string Name;

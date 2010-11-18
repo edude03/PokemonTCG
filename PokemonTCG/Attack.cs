@@ -15,8 +15,7 @@ namespace PokemonTCG
         public List<Pair> requirements;
         public string type;
         public PokemonTCG.Enums.Condition effects;
-        Random rnd = new Random();
-
+		
         //Constructor
         public Attack(string info)
         {

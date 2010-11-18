@@ -7,7 +7,6 @@ using System.Collections;
 using System.Reflection;
 
 //Eventually remove all VB code.
-
 using PokemonTCG.ServiceReference2;
 using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.VisualBasic;
@@ -74,9 +73,11 @@ namespace PokemonTCG
 				Console.WriteLine("Please enter your name Player 2");
 				input = Console.ReadLine();
 				player2 = new Player(input);
-
+				
+				//Get the game started.
 				gameLoop();
 			}
+			//TODO: Make the game continue if this is thrown
 			catch (NotImplementedException e)
 			{
 				Console.WriteLine("woops forgot to add code for {0}", e.ToString());
@@ -241,18 +242,24 @@ namespace PokemonTCG
 
                 case 5:
                     break;
-
-                case 6:
+				
+				
+				//Todo: Create a new pokedex function 
+				
+                case 6: break;
+				/*
                     {
                         Console.WriteLine("Please enter a number between 0 and 4086");
                         int demo = Conversions.ToInteger(Console.ReadLine());
-                        mycard = new Card(demo);
+                        //mycard = new Card(demo);
                         Console.WriteLine(mycard.Name);
                         Console.WriteLine("HP: " + mycard.HP.ToString() + " Resistance: " + mycard.Resistance +
                                           " Stage :" + mycard.Stage);
                         Console.WriteLine("\r\n");
                         break;
                     }
+                    */
+				
                 case 7:
                     player1.isTurn = false;
                     return;
@@ -638,6 +645,18 @@ namespace PokemonTCG
             }
         }
 
+		/// <summary>
+		/// Makes sure the input is within the bounds. 
+		/// </summary>
+		/// <param name="lowerBounds">
+		/// A <see cref="System.Int32"/> equal to the lowest accepable value
+		/// </param>
+		/// <param name="upperBounds">
+		/// A <see cref="System.Int32"/> equal the the highest acceptable value
+		/// </param>
+		/// <returns>
+		/// A <see cref="System.Int32"/> equal to th input (assuming it's valid) 
+		/// </returns>
 		public static int getValidUserInput(int lowerBounds, int upperBounds)
 		{
 			bool validInput = false;

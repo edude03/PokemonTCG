@@ -91,6 +91,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Downloads\Json35r8\Bin\DotNet20\Newtonsoft.Json.Net20.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB, Version=0.90.0.1, Culture=neutral, PublicKeyToken=f61bd00ba2535278">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\MongoDB.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attack.cs" />
@@ -111,7 +115,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Data\Mongo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

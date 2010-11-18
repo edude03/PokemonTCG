@@ -1,10 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="PokemonTCG/Player.cs" ctype="Workbench">
+  <MonoDevelop.Ide.Workbench ActiveDocument="PokemonTCG/Deck.cs" ctype="Workbench">
     <Files>
-      <File FileName="PokemonTCG/Player.cs" Line="27" Column="33" />
-      <File FileName="PokemonTCG/Program.cs" Line="570" Column="72" />
+      <File FileName="PokemonTCG/Player.cs" Line="19" Column="1" />
+      <File FileName="PokemonTCG/Program.cs" Line="7" Column="25" />
       <File FileName="PokemonTCG/Menu.cs" Line="3" Column="19" />
+      <File FileName="PokemonTCG/Deck.cs" Line="33" Column="10" />
+      <File FileName="PokemonTCG/Data/Mongo.cs" Line="12" Column="1" />
+      <File FileName="PokemonTCG/Card.cs" Line="200" Column="14" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

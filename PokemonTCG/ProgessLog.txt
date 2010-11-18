@@ -24,3 +24,8 @@
             TODO: Rewrite attack parser
             TODO: Enum what effects attacks can have.
             Implemented an enc algo for CG
+            
+[11/17/10] Note: There is a lot missing that should be in the SVN logs that were lost :(
+		   Changed database from access to Mongo
+		   Cleaned up Card instanation code
+		   

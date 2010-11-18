@@ -4,6 +4,8 @@ using System.Text;
 using System.Runtime.CompilerServices;
 using System.Data.OleDb;
 using System.Data;
+using MongoDB;
+using MongoDB.Configuration;
 
 
 //Remove visualbasic code in the furture
@@ -189,69 +191,55 @@ namespace PokemonTCG
             }
             return true;
         }
-
+		
+		//TODO: Fix cards to not be initalized on construtor call?
+		//TODO: Make card (or its int method) accept a database object and the BOGUS_ID to allow the DB to be opened and closed outside the loop
+		//TODO: Decouple Card() from the database code. 
+		//TODO: make a generic database access method instead of mongo
         //Constructor
         /// <summary>
         /// The Constructor for Card,
         /// </summary>
         /// <param name="BOGUS_ID">Bogus_ID is the ID value associated with a card in the database</param>
-        public Card(int BOGUS_ID)
+        public Card(int BOGUS_ID, Mongo mongo)
         {
-            DataSet oDS = Program.RunDBCommand("SELECT * FROM PokemonTCG WHERE BOGUS_ID = " + Conversions.ToString(BOGUS_ID));
-            this.Name = Conversions.ToString(oDS.Tables[0].Rows[0]["Name"]);
-            if (Information.IsDBNull(RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(oDS.Tables[0].Rows[0]["HP"]))))
-            {
-                this.HP = 0;
-            }
-            else
-            {
-                this.HP = Conversions.ToInteger(oDS.Tables[0].Rows[0]["HP"]);
-            }
-            if (Information.IsDBNull(RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(oDS.Tables[0].Rows[0]["Resistance"]))))
-            {
-                this.Resistance = "";
-            }
-            else
-            {
-                this.Resistance = Conversions.ToString(oDS.Tables[0].Rows[0]["Resistance"]);
-            }
-            if (Information.IsDBNull(RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(oDS.Tables[0].Rows[0]["Weakness"]))))
-            {
-                this.Weakness = "";
-            }
-            else
-            {
-                this.Weakness = Conversions.ToString(oDS.Tables[0].Rows[0]["Weakness"]);
-            }
-            this.Type = Conversions.ToString(oDS.Tables[0].Rows[0]["Type"]);
-            this.Stage = Conversions.ToString(oDS.Tables[0].Rows[0]["Stage"]);
-            this.BOGUS_ID = BOGUS_ID;
-
-            if (this.stage != Enums.Stage.Energy && this.stage != Enums.Stage.Trainer)
-            {
-                //Get the information for the card then parse through it
-
-                this.atk[0] = new Attack(Conversions.ToString(oDS.Tables[0].Rows[0]["attack1"]));
-                
-                if (this.atk[0].damage == null)
-                {
-                    this.atk[0].damage = Conversions.ToString(oDS.Tables[0].Rows[0]["TypicalDamage1"]);
-                }
-                if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(oDS.Tables[0].Rows[0]["attack2"]))))
-                {
-                    
-                    //Conversions.ToString(oDS.Tables[0].Rows[0]["atk2"]);
-                    this.atk[1] = new Attack(Conversions.ToString(oDS.Tables[0].Rows[0]["attack2"]));
-                    
-                    //this.atk;
-                    if (this.atk[1].damage == null)
-                    {
-                        this.atk[1].damage = Conversions.ToString(oDS.Tables[0].Rows[0]["TypicalDamage2"]);
-                    }
-                }
-            }
-        }
-
+			Document query = new Document();
+			query["BOGUS_ID"] = BOGUS_ID;
+			Document results = mongo["pokemon"]["cards"].FindOne(query);
+			
+			//TODO: Convert the strings to their proper type internally 
+			this.BOGUS_ID = BOGUS_ID; //Is passed in. 
+			this.Name = results["Name"].ToString();
+			this.Stage = results["Stage"].ToString();
+			this.Type = results["Type"].ToString();
+			
+			if (this.type != Enums.Element.Trainer && this.type != Enums.Element.Energy)
+			{
+				this.HP = int.Parse((results["HP"] ?? 0).ToString());
+				this.Weakness = results["Weakness"].ToString();
+				this.Resistance = results["Resistance"].ToString();
+				
+				//TODO: Requirements (enegeries) 
+				if (!(results["Attack1"].ToString() == string.Empty)) //If there is an attack 1
+				{
+					this.atk[0] = new Attack(results["Attack1"].ToString());
+					this.atk[0].damage = results["TypicalDamage1"].ToString();
+				}
+					                         
+				if (!(results["Attack2"].ToString() == string.Empty))
+			    {
+					this.atk[1] = new Attack(results["Attack2"].ToString());
+					this.atk[1].damage = (results["TypicalDamage2"].ToString());
+				}
+			}				                   
+		}
+		
+		//Overloaded card constructor, does nothing apparently 
+		//TODO: Fix energy class that references this. 
+		public Card(int BOGUS_ID)
+		{}
+		
+		
         public string getName()
         {
             return this.Name;
@@ -339,5 +327,6 @@ namespace PokemonTCG
                 }
             }
         }
+		
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Microsoft.VisualBasic;
-
+using MongoDB;
 namespace PokemonTCG
 {
     
@@ -176,11 +176,22 @@ namespace PokemonTCG
             //Init the cards to their proper values
 
             deck = new Card[this.Size];
-
+			
+			//TODO: If mongo can't connect for some reason find out why and correct the issue,
+			//To improve performance and to ensure that we don't run out of connections 
+			//A universal connection is created outside the loop, then closed after the deck is created. 
+			
+			//Instanate the connection 
+			Mongo mongo = new Mongo();
+			mongo.Connect();
+			
             for (int k = 0; k < Size; k++)
             {
-                this.deck[k] = new Card(this.intDeck[k]);
+                this.deck[k] = new Card(this.intDeck[k], mongo);
             }
+			
+			//Close the connection
+			mongo.Disconnect();
 		}
 
         /// <summary>

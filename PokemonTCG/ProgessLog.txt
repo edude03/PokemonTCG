@@ -29,4 +29,7 @@
 		   Changed database from access to Mongo
 		   Cleaned up Card instanation code
 		   TODO: Push decks, game configuration and stuff to the Database later. 
+		   TODO: Remove deckname / deckpath, the data should already be in the program at this point. 
+		   TODO: Rewrite attack code from scratch
+		   TODO: Test energy code. 
 		   

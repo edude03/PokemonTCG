@@ -22,16 +22,11 @@ namespace PokemonTCG
         /// </summary>
         public int Size;
 		
-		//Clean deck Contstructor
-		public Deck()
-		{
-			
-		}
 		
 		//Deck assuming that a premade deck is passed in
-		public Deck(List<Card> deck)
+		public Deck(Card[] deck)
 		{
-			
+			this.deck = deck;
 		}
 		
 		//Deck with a CSV Stream
@@ -39,62 +34,8 @@ namespace PokemonTCG
 		{
 		}
 		
-		public List<Card> intArrayDeck(int[] intDeck)
-		{
-			int Size = intDeck.Length;
-			deck = new Card[Size];
-			
-			//TODO: If mongo can't connect for some reason find out why and correct the issue,
-			//To improve performance and to ensure that we don't run out of connections 
-			//A universal connection is created outside the loop, then closed after the deck is created. 
-			//Instanate the connection 
-			Mongo mongo = new Mongo();
-			mongo.Connect();
-			
-            for (int k = 0; k < Size; k++)
-            {
-                this.deck[k] = new Card(this.intDeck[k], mongo);
-            }
-			
-			//Close the connection
-			mongo.Disconnect();
-		}
 		
 		
-		public Card getCardFromDB(int BOGUS_ID, Mongo mongo) 
-		{
-			Document query = new Document();
-			query["BOGUS_ID"] = BOGUS_ID;
-			Document results = mongo["pokemon"]["cards"].FindOne(query);
-			
-			//TODO: Convert the strings to their proper type internally 
-			BOGUS_ID = BOGUS_ID; //Is passed in. 
-			this.Name = results["Name"].ToString();
-			this.Stage = results["Stage"].ToString();
-			this.Type = results["Type"].ToString();
-			
-			if (this.type != Enums.Element.Trainer && this.type != Enums.Element.Energy)
-			{
-				this.HP = int.Parse((results["HP"] ?? 0).ToString());
-				this.Weakness = results["Weakness"].ToString();
-				this.Resistance = results["Resistance"].ToString();
-				
-				//TODO: Requirements (energies) 
-				if (!(results["Attack1"].ToString() == string.Empty)) //If there is an attack 1
-				{
-					this.atk[0] = new Attack(results["Attack1"].ToString());
-					this.atk[0].damage = results["TypicalDamage1"].ToString();
-				}
-					                         
-				if (!(results["Attack2"].ToString() == string.Empty))
-			    {
-					this.atk[1] = new Attack(results["Attack2"].ToString());
-					this.atk[1].damage = (results["TypicalDamage2"].ToString());
-				}
-				
-				return new Card(BOGUS_ID);
-			}				                   
-		}
 		
 		
         //Constructor
@@ -111,143 +52,7 @@ namespace PokemonTCG
 
             intDeck = Program.LoadDeck2(deckpath, deckname);
             this.Size = intDeck.Length;
-            
-            #region olddeck parser
-            /*
-
-            try
-            {
-
-                //ByVal deckname As String, ByRef PlayersDeck As Array, extra code
-                //Get values from the deck.csv file and load them into the myplayer.deck array using a for loop
-                //Writing this because the current code I've seen is useless :|
-
-
-
-                string strContents = null;
-                StreamReader objReader = default(StreamReader);
-                int[] returnError = { -1 };
-                int[] dlength = { 0 };
-                int i = 0;
-                
-
-                
-                    objReader = new StreamReader((deckpath + deckname));
-                    strContents = objReader.ReadToEnd();
-                    objReader.Close();
-                    char del = ',';
-                    //Parse thru the items read in
-                    string[] itemsRead = strContents.Split(del);
-                    //Console.Write("Deck Import complete")
-                    //Console.Write(ControlChars.NewLine)
-
-                    //Since we can assume that only numbers will be imported then we should force the return of an integer array :D 
-                    int[] intLoadDeck = new int[Information.UBound(itemsRead,1) + 1];
-
-                    //Filter out inappropriate values, and parse the correct values into the array.
-                    //int intItemsRead = 0;
-                    this.Size = itemsRead.Length - 1;
-
-                    if (!(Information.UBound(itemsRead,1) <= 0))
-                    {
-                        //Do until we have parsed 60 cards (the max for a deck) or 
-                        while (!(((i == 60) | (i == itemsRead.Length))))
-                        {
-                            if (int.Parse(itemsRead[i]) > 4086)
-                            {
-                                
-                                
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                    Console.WriteLine("The Value " + itemsRead[i] + " Cannot be used an is invalid");
-                                    Console.ResetColor();
-                                
-                            }
-                            else if (int.Parse(itemsRead[i]) <= 0)
-                            {
-                               
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                    Console.WriteLine("The Value " + itemsRead[i] + " Cannot be used an is invalid");
-                                    Console.ResetColor();
-                                
-                            }
-                            else
-                            {
-                                intLoadDeck[i] = int.Parse(itemsRead[i]);
-                            }
-                            i += 1;
-                            //Needed because its not a forloop therefore i doesn't auto increment
-                        }
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Sorry, this deck cannot be used as it has less than 1 card");
-                        Console.ResetColor();
-                        
-                    }
-
-
-                    //Since zeros get put in where data cannot be loaded
-                    //we will do a final check of the array just to be sure
-                    int firstI = 0;
-                    int j = 0;
-
-                    //Step 1: Loop thru the deck to find a position with a zero, then replace it with the first position without a zero
-                    //until all the zeros are at the end of the array
-                    for (i = 0; i <= (Information.UBound(intLoadDeck,1) - 1); i++)
-                    {
-                        if (intLoadDeck[i] == 0)
-                        {
-                            firstI = i;
-                            j = i;
-                            while (!(intLoadDeck[j] > 0 | j == Information.UBound(intLoadDeck,1)))
-                            {
-                                j = j + 1;
-                            }
-                            intLoadDeck[firstI] = intLoadDeck[j];
-                            intLoadDeck[j] = 0;
-                        }
-                    }
-
-                    //Step 2: Alright, now that all the zeros are at the end of the array, make sure they disapear, 
-                    //this is done by find the first element without a zero, and shrinking the array to that location
-                    j = Information.UBound(intLoadDeck,1);
-                    while (!(intLoadDeck[j] > 0))
-                    {
-                        j --;
-                    }
-                    if (j + 1 < Information.UBound(intLoadDeck,1))
-                    {
-                       
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine(ControlChars.NewLine);
-                            Console.WriteLine("The deck contained a number of invalid values, or was too large therefore the deck has been shrunk to " + j + 1 + " cards.");
-                        
-                        Array.Resize(ref intLoadDeck, j+1);
-                        this.Size = j+1;
-                    }
-                    intDeck = intLoadDeck;
-                    deck = new Card[this.Size];
-
-                    for (int k = 0; k < Size; k++)
-                    {
-                        this.deck[k] = new Card(this.intDeck[k]);
-                    }
-
-                   
-                }
-
-
-                catch (System.FormatException Ex)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("Sorry, the deck you have selected is invalid, please select a different one");
-                    Console.ResetColor();
-                    throw new myExceptions.InvalidDeckException();
-                }
-             * 
-             * */
-            #endregion
+      
             //Init the cards to their proper values
 
             deck = new Card[this.Size];
@@ -308,11 +113,13 @@ namespace PokemonTCG
             return temp;
         }
 		
+		
 		//Adds a card to the deck list. 
 		public void add(Card card)
 		{
 			this.add(card);
 		}
+		
 
     }
 }

@@ -5,6 +5,7 @@ using System.Data.OleDb;
 using System.Data;
 using System.Collections;
 using System.Reflection;
+using MongoDB;
 
 //Eventually remove all VB code.
 using PokemonTCG.ServiceReference2;
@@ -20,6 +21,8 @@ namespace PokemonTCG
         private static bool gameInPlay = true;
         private static bool playAgain = true;
         private static Player player1, player2;
+		private static string deckpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "decks" + Path.DirectorySeparatorChar;
+		private static string deckname;
 
         private static void Main(string[] args)
         {
@@ -67,11 +70,13 @@ namespace PokemonTCG
 
 				Console.WriteLine("Please enter your name Player 1");
 				string input = Console.ReadLine();
-				player1 = new Player(input);
-
+				player1 = new Player(input, chainload(PokemonTCG.Program.deckpath));
+				setup(player1);
+				
 				Console.WriteLine("Please enter your name Player 2");
 				input = Console.ReadLine();
-				player2 = new Player(input);
+				player2 = new Player(input, chainload(PokemonTCG.Program.deckpath));
+				setup(player2);
 				
 				//Get the game started.
 				gameLoop();
@@ -538,21 +543,30 @@ namespace PokemonTCG
             
         }
 
-        public static void setup()
+        public static void setup(Player currentPlayer)
         {
             //Shuffle the opponets deck
+			currentPlayer.shuffleDeck();
 
             //Draw seven cards
-
+			currentPlayer.draw(7);
+			
+			//Place Prizes
+			currentPlayer.initPrizes(6);
+			
+			//--For now, right here the "firstTurn" code is run
+			
+			//TODO: Move first turn code over here. 
             //Pick a basic pokemon (Hand to active)
-            //Play
+            
+			//Play
             //--Puts a card whereever is supposed to go
             //Check
             //--Displays stats on the pokemon
 
             //Up to 5 basic pkm on the bench
 
-            //Place Prizes
+            
 
             //Flip coin
             //--Heads player1, Tails Player2
@@ -670,6 +684,185 @@ namespace PokemonTCG
 			} while (!validInput);
 
 			return intOut;
+		}
+		
+		private static Card[] intArrayDeck(int[] intDeck)
+		{
+			int Size = intDeck.Length;
+			Card[] deck = new Card[Size];
+			
+			//TODO: If mongo can't connect for some reason find out why and correct the issue,
+			//To improve performance and to ensure that we don't run out of connections 
+			//A universal connection is created outside the loop, then closed after the deck is created. 
+			//Instanate the connection 
+			Mongo mongo = new Mongo();
+			mongo.Connect();
+			
+            for (int k = 0; k < Size; k++)
+            {
+                deck[k] = getCardFromDB(intDeck[k], mongo);
+            }
+			
+			//Close the connection
+			mongo.Disconnect();
+			
+			return deck;
+		}
+		
+		public static Card getCardFromDB(int BOGUS_ID, Mongo mongo) 
+		{
+			Document query = new Document();
+			query["BOGUS_ID"] = BOGUS_ID;
+			Document results = mongo["pokemon"]["cards"].FindOne(query);
+			
+			//TODO: Convert the strings to their proper type internally 
+			string Name = results["Name"].ToString();
+			string Stage = results["Stage"].ToString();
+			string Type = results["Type"].ToString();
+			Enums.Element type = parseType(Type);
+			Enums.Stage stage = parseStage(Stage);
+			int HP = 0;
+			string Weakness = "";
+			string Resistance = "";
+			Attack[] atk = new Attack[2];
+
+			
+			if (type != Enums.Element.Trainer && type != Enums.Element.Energy)
+			{
+				HP = int.Parse((results["HP"] ?? 0).ToString());
+				Weakness = results["Weakness"].ToString();
+				Resistance = results["Resistance"].ToString();
+				
+				
+				//TODO: Requirements (energies) 
+				if (!(results["Attack1"].ToString() == string.Empty)) //If there is an attack 1
+				{
+					atk[0] = new Attack(results["Attack1"].ToString());
+					atk[0].damage = results["TypicalDamage1"].ToString();
+				}
+					                         
+				if (!(results["Attack2"].ToString() == string.Empty))
+			    {
+					atk[1] = new Attack(results["Attack2"].ToString());
+					atk[1].damage = (results["TypicalDamage2"].ToString());
+				}
+			}
+			//Make sure to fix card to correct this issue. 
+			return new Card(BOGUS_ID, Name, HP, Stage, Weakness, Resistance, Type, atk); 
+		}
+		
+		//This is to keep the code working the same way until I get around to abstracting the Deck Card and player instanation methods. 
+		//TODO: Fix this code. (maybe make it an option?)
+		private static Card[] chainload(string deckpath)
+		{
+			return intArrayDeck(LoadDeck2(deckpath, chooseDeck(deckpath)));
+			
+		}
+		
+		private static Enums.Stage parseStage(string strStage)
+		{
+			Enums.Stage stage;
+			switch (strStage)
+			{
+				case "Stage 1": stage = Enums.Stage.Stage1; break;
+				case "Stage 2": stage = Enums.Stage.Stage2; break;
+				case "Baby": stage = Enums.Stage.Baby; break;
+				case "Basic": stage = Enums.Stage.Basic; break;
+				default: if (strStage.StartsWith("Trainer"))
+					{
+						stage = Enums.Stage.Trainer;
+					}
+					else if (strStage.Contains("Energy"))
+					{
+						stage = Enums.Stage.Energy;
+					}
+					else if (strStage.Contains("Level Up"))
+					{
+						throw new myExceptions.InvalidDeckException("Unhandled card type loaded! (\"Level Up\")");
+					}
+					else
+					{
+						Console.WriteLine("What?");
+						throw new myExceptions.InvalidDeckException("An invalid card was loaded");
+					}
+					break;
+			}
+			return stage;
+		}
+		
+		private static Enums.Element parseType(string strType)
+		{
+			Enums.Element type;
+			// some database entries have multiple space delimited types; only accept first type
+					string[] tmpStrArr = strType.Split(" ".ToCharArray());
+					string firstType = tmpStrArr[0];
+
+					switch (firstType)
+					{
+						case "Trainer":
+							type = Enums.Element.Trainer;
+							break;
+						case "Energy":
+							type = Enums.Element.Energy;
+							break;
+						case "Colorless":
+							type = Enums.Element.Colorless;
+							break;
+						case "Bug":
+							type = Enums.Element.Bug; // "bug" type does not exist in database provided
+							break;
+						case "Darkness":
+							type = Enums.Element.Dark;
+							break;
+						case "Lightning":
+							type = Enums.Element.Electric;
+							break;
+						case "Fighting":
+							type = Enums.Element.Fight;
+							break;
+						case "Fire":
+							type = Enums.Element.Fire;
+							break;
+						case "Flying":
+							type = Enums.Element.Flying; // "flying" type does not exist in database provided
+							break;
+						case "Ghost":
+							type = Enums.Element.Ghost; // "ghost" type does not exist in database provided
+							break;
+						case "Grass":
+							type = Enums.Element.Grass;
+							break;
+						case "Water":
+							type = Enums.Element.Water;
+							break;
+						case "Steel":
+							type = Enums.Element.Steel; // "steel" type does not exist in database provided
+							break;
+						case "Rock":
+							type = Enums.Element.Rock; // "rock" type does not exist in database provided
+							break;
+						case "Psychic":
+							type = Enums.Element.Psychic;
+							break;
+						case "Poison":
+							type = Enums.Element.Poison; // "poison" type does not exist in database provided
+							break;
+						case "Normal":
+							type = Enums.Element.Normal; // "normal" type does not exist in database provided
+							break;
+						case "Metal":
+							type = Enums.Element.Metal;
+							break;
+						case "Ground":
+							type = Enums.Element.Ground; // "ground" type does not exist in database provided
+							break;
+						case "Ice":
+							type = Enums.Element.Ice; // "ice" type does not exist in database provided
+							break;
+						default:
+							throw new myExceptions.InvalidEnergyTypeException("Invalid energy type: \"" + strType + "\"");
+					}
+			return type;
 		}
     }
 }

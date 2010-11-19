@@ -95,11 +95,22 @@ namespace PokemonTCG
             }
         }
        
+		
+		public void draw(int n)
+		{
+		  for (int i=0; i < n; i++)
+		  {
+			this.Hand.Add(deck.draw());
+		  }
+		}
+		
 
         /// <summary>
         /// Takes the top card from the deck and passes it to the calling method.
         /// </summary>
-        public void draw(int n)
+       
+	/*		
+	  public void draw(int n)
         {
             if (n == 1)
             {
@@ -112,6 +123,12 @@ namespace PokemonTCG
             }
             
         }
+        */
+		
+		public void shuffleDeck()
+		{
+			deck.Shuffle();
+		}
 
         /// <summary>
         /// Calls the deck 
@@ -239,5 +256,6 @@ namespace PokemonTCG
 				Prizes.Add(deck.draw());
 			}
 		}
+		
   }
 }

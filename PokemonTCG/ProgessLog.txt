@@ -46,3 +46,5 @@
 		   calling player = new player however, because of the way the contructor works, it basically is like starting the game completely from
 		   scratch which isn't what we want. If the play doesn't choose a new deck we should be able to use the cards that are already in play. 
 		   Note: For player code, we can easily implement login. and store things like wins loses and decks stored right in the DB.
+		   Removed the old parser code
+		   Mostly extracted the methods, see todos in program. 

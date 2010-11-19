@@ -204,7 +204,8 @@ namespace PokemonTCG
         /// <param name="mongo">Is the database object which card uses to get the data</param>
         public Card(int BOGUS_ID, Mongo mongo)
         {
-			
+			//Incase I forgot to remove this from something else
+			//throw System.NotImplementedException; 
 		}
 		
 		//Overloaded card constructor, does nothing apparently 
@@ -215,15 +216,15 @@ namespace PokemonTCG
 		}
 		
 		//Proper card method.
-		public Card(int BOGUS_ID, string name, int HP, PokemonTCG.Enums.Stage stage, string Weakness, string Resistance, Enums.Element type, Attack[] atk)
+		public Card(int BOGUS_ID, string name, int HP, string stage, string Weakness, string Resistance, string type, Attack[] atk)
 		{
 			this.BOGUS_ID = BOGUS_ID;
 	       	this.Name = name;
 	        this.HP = HP;
-	        this.stage = stage;
+	        this.Stage = stage;
 	        this.Weakness = Weakness;
 	        this.Resistance = Resistance;
-	        this.type = type;
+	        this.Type = type;
 	        this.atk = atk;
 	        
 		}

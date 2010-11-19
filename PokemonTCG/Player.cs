@@ -16,6 +16,7 @@ namespace PokemonTCG
         public List<Card> Hand = new List<Card>();
         public List<Card> Bench = new List<Card>(5);
         public List<Card> Discarded = new List<Card>(60);
+		public List<Card> Prizes = new List<Card>(6);
 
 
         public Card actPkm;
@@ -35,6 +36,12 @@ namespace PokemonTCG
         //Player may get a key section for encrypting and decryting keys
      
         //Methods
+		
+		public Player(string name, Card[] deck)
+		{
+			this.name = name;
+			this.deck = new Deck(deck);
+		}
 
         /// <summary>
         /// Creates a new "player", sets the name, Loads the players deck
@@ -128,7 +135,7 @@ namespace PokemonTCG
         /// <summary>
         /// Puts the card that was passed in into the discarded array.
         /// </summary>
-        public void discard()
+        public void discard(Card card)
         {
             throw new System.NotImplementedException();
         }
@@ -211,7 +218,26 @@ namespace PokemonTCG
                 return null;
             }
         }
-        
-        
-        }
-    }
+		
+		//It's supposed to set the game back to stock
+		//TODO: Write this method
+		public void reset()
+		{
+			//Move all the cards from the Deck 
+			while (Discarded[0] != null)
+			{
+				this.deck.add(Discarded[0]);
+			}
+			
+		}
+		
+		//Add randomly drawn prizes to the Prizes list. 
+		public void initPrizes(int numOfPrizes)
+		{
+			for (int i = 0; i < numOfPrizes; i++)
+			{
+				Prizes.Add(deck.draw());
+			}
+		}
+  }
+}

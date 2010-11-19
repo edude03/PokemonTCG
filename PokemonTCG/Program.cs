@@ -21,7 +21,6 @@ namespace PokemonTCG
         private static bool playAgain = true;
         private static Player player1, player2;
 
-
         private static void Main(string[] args)
         {
             //Use bubble up catches
@@ -349,22 +348,7 @@ namespace PokemonTCG
             //choosecard method will be launched before the setActPKM command
             player1.isFirstTurn = false;
         }
-
-        public static DataSet RunDBCommand(string SQL)
-        {
-			OleDbConnection oConn = new OleDbConnection("Data Source='" + FileSystem.CurDir() +
-									@"~\PKMDB.mdb';Provider='Microsoft.Jet.OleDb.4.0'");
-			OleDbCommand oCmd = new OleDbCommand(SQL, oConn);
-			oCmd.CommandType = CommandType.Text;
-			OleDbDataAdapter oDA = new OleDbDataAdapter(oCmd);
-			DataSet oDS = new DataSet();
-			oDA.Fill(oDS, "Result");
-			oDA.Dispose();
-			oCmd.Dispose();
-			oConn.Dispose();
-			return oDS;
-        }
-        
+    
         /*
         #region LoadDeck
         public static int[] LoadDeck(string deckpath, string deckname)
@@ -457,6 +441,7 @@ namespace PokemonTCG
         }
         #endregion
          * */
+		
 
         public static string chooseDeck(string deckPath)
         {
@@ -533,8 +518,7 @@ namespace PokemonTCG
         {
             Console.WriteLine("1. Hand\t 2. Check\t 3.Retreat");
             Console.WriteLine("4. Attack\t 5.Pkmn Power\t 6.Done");
-            int selection = int.Parse(Console.ReadLine());
-            switch (selection)
+			switch (getValidUserInput(1,6))
             {
                 case 1: //Hand
                     break;

@@ -21,7 +21,82 @@ namespace PokemonTCG
         /// Number of items in the deck
         /// </summary>
         public int Size;
-
+		
+		//Clean deck Contstructor
+		public Deck()
+		{
+			
+		}
+		
+		//Deck assuming that a premade deck is passed in
+		public Deck(List<Card> deck)
+		{
+			
+		}
+		
+		//Deck with a CSV Stream
+	    public Deck(int[] intDeck)
+		{
+		}
+		
+		public List<Card> intArrayDeck(int[] intDeck)
+		{
+			int Size = intDeck.Length;
+			deck = new Card[Size];
+			
+			//TODO: If mongo can't connect for some reason find out why and correct the issue,
+			//To improve performance and to ensure that we don't run out of connections 
+			//A universal connection is created outside the loop, then closed after the deck is created. 
+			//Instanate the connection 
+			Mongo mongo = new Mongo();
+			mongo.Connect();
+			
+            for (int k = 0; k < Size; k++)
+            {
+                this.deck[k] = new Card(this.intDeck[k], mongo);
+            }
+			
+			//Close the connection
+			mongo.Disconnect();
+		}
+		
+		
+		public Card getCardFromDB(int BOGUS_ID, Mongo mongo) 
+		{
+			Document query = new Document();
+			query["BOGUS_ID"] = BOGUS_ID;
+			Document results = mongo["pokemon"]["cards"].FindOne(query);
+			
+			//TODO: Convert the strings to their proper type internally 
+			BOGUS_ID = BOGUS_ID; //Is passed in. 
+			this.Name = results["Name"].ToString();
+			this.Stage = results["Stage"].ToString();
+			this.Type = results["Type"].ToString();
+			
+			if (this.type != Enums.Element.Trainer && this.type != Enums.Element.Energy)
+			{
+				this.HP = int.Parse((results["HP"] ?? 0).ToString());
+				this.Weakness = results["Weakness"].ToString();
+				this.Resistance = results["Resistance"].ToString();
+				
+				//TODO: Requirements (energies) 
+				if (!(results["Attack1"].ToString() == string.Empty)) //If there is an attack 1
+				{
+					this.atk[0] = new Attack(results["Attack1"].ToString());
+					this.atk[0].damage = results["TypicalDamage1"].ToString();
+				}
+					                         
+				if (!(results["Attack2"].ToString() == string.Empty))
+			    {
+					this.atk[1] = new Attack(results["Attack2"].ToString());
+					this.atk[1].damage = (results["TypicalDamage2"].ToString());
+				}
+				
+				return new Card(BOGUS_ID);
+			}				                   
+		}
+		
+		
         //Constructor
         /// <summary>
         /// Constructor
@@ -193,6 +268,7 @@ namespace PokemonTCG
 			//Close the connection
 			mongo.Disconnect();
 		}
+		
 
         /// <summary>
         /// Overloaded Shuffle Method. Shuffles the deck when called without parameters
@@ -231,6 +307,12 @@ namespace PokemonTCG
 				counter++;
             return temp;
         }
+		
+		//Adds a card to the deck list. 
+		public void add(Card card)
+		{
+			this.add(card);
+		}
 
     }
 }

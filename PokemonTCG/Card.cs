@@ -22,7 +22,7 @@ namespace PokemonTCG
         //Variables.
         //Since this code wasn't designed with encapsulation in mind, all the 
         //variables are public, however this should be changed later.
-
+		//TODO: Just realized that cards data is overwritten, which means that certain scripts won't work.
         public int BOGUS_ID;
         public string Name;
         public int HP;
@@ -30,7 +30,7 @@ namespace PokemonTCG
         public string Weakness;
         public string Resistance;
         public Enums.Element type;
-        public Enums.Condition Status;
+        public Enums.Condition Status; //TODO: ensure that you can have mutliple statuses at the same time. 
         public List<Card> attached = new List<Card>();
         public Attack[] atk = new Attack[2];
         
@@ -201,44 +201,32 @@ namespace PokemonTCG
         /// The Constructor for Card,
         /// </summary>
         /// <param name="BOGUS_ID">Bogus_ID is the ID value associated with a card in the database</param>
+        /// <param name="mongo">Is the database object which card uses to get the data</param>
         public Card(int BOGUS_ID, Mongo mongo)
         {
-			Document query = new Document();
-			query["BOGUS_ID"] = BOGUS_ID;
-			Document results = mongo["pokemon"]["cards"].FindOne(query);
 			
-			//TODO: Convert the strings to their proper type internally 
-			this.BOGUS_ID = BOGUS_ID; //Is passed in. 
-			this.Name = results["Name"].ToString();
-			this.Stage = results["Stage"].ToString();
-			this.Type = results["Type"].ToString();
-			
-			if (this.type != Enums.Element.Trainer && this.type != Enums.Element.Energy)
-			{
-				this.HP = int.Parse((results["HP"] ?? 0).ToString());
-				this.Weakness = results["Weakness"].ToString();
-				this.Resistance = results["Resistance"].ToString();
-				
-				//TODO: Requirements (enegeries) 
-				if (!(results["Attack1"].ToString() == string.Empty)) //If there is an attack 1
-				{
-					this.atk[0] = new Attack(results["Attack1"].ToString());
-					this.atk[0].damage = results["TypicalDamage1"].ToString();
-				}
-					                         
-				if (!(results["Attack2"].ToString() == string.Empty))
-			    {
-					this.atk[1] = new Attack(results["Attack2"].ToString());
-					this.atk[1].damage = (results["TypicalDamage2"].ToString());
-				}
-			}				                   
 		}
 		
 		//Overloaded card constructor, does nothing apparently 
 		//TODO: Fix energy class that references this. 
 		public Card(int BOGUS_ID)
-		{}
+		{
+			
+		}
 		
+		//Proper card method.
+		public Card(int BOGUS_ID, string name, int HP, PokemonTCG.Enums.Stage stage, string Weakness, string Resistance, Enums.Element type, Attack[] atk)
+		{
+			this.BOGUS_ID = BOGUS_ID;
+	       	this.Name = name;
+	        this.HP = HP;
+	        this.stage = stage;
+	        this.Weakness = Weakness;
+	        this.Resistance = Resistance;
+	        this.type = type;
+	        this.atk = atk;
+	        
+		}
 		
         public string getName()
         {
@@ -285,16 +273,6 @@ namespace PokemonTCG
             }
 
 
-        }
-
-        public bool meetsEnergy(Attack atk)
-        {
-            //compare the number of energies in each array
-            //and return true / false
-            List<Pair> temp = new List<Pair>();
-
-
-            return true;
         }
 
         public void parseEnergy(string info)

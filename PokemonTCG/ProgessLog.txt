@@ -17,8 +17,8 @@
 			Todo: Add network code
 
 [12/12/08]  Todo:add XML parser and VFS
-[1/25/09]   HBD, Fixed issues when there are less than 7 cards in the deck (draw too many and not adjusting the deck size after the array gets resized)	
-[1/27/09]   Added Statuses.
+[01/25/09]  HBD, Fixed issues when there are less than 7 cards in the deck (draw too many and not adjusting the deck size after the array gets resized)	
+[01/27/09]  Added Statuses.
             Laid the framework for energies.
             Cleaned up enums
             [Done, just don't remember when] TODO: Rewrite attack parser
@@ -28,8 +28,21 @@
 [11/17/10] Note: There is a lot missing that should be in the SVN logs that were lost :(
 		   Changed database from access to Mongo
 		   Cleaned up Card instanation code
-		   TODO: Push decks, game configuration and stuff to the Database later. 
+		   TODO: Push decks, game configuration and stuff to the Database later. (IE, user support) 
 		   TODO: Remove deckname / deckpath, the data should already be in the program at this point. 
 		   TODO: Rewrite attack code from scratch
 		   TODO: Test energy code. 
 		   
+[11/18/10] Removed old DB code
+		   TODO: make a datasource agnostic load method. 
+		   TODO: Fix play again.
+		   TODO: Make an initalization method (ie the constructor) to replace all the magic numbers (such as size of deck, number of prizes range of valid cards etc)		   
+		   TODO: Write move method. 
+		   TODO: Fix constructors
+		   TODO: rewrite choosedeck to actually load the deck file. 
+		   FIXED:[12/7/08] Todo: fix the deck constructor so that a Stream could be passed in.
+		   Note: Problem with fixing the playAgain() code is that the cards are permanently modified so even putting all the cards back
+		   into the deck from discarded and from the hand would mean their HP would be off (for example) the entire game can be restarted by 
+		   calling player = new player however, because of the way the contructor works, it basically is like starting the game completely from
+		   scratch which isn't what we want. If the play doesn't choose a new deck we should be able to use the cards that are already in play. 
+		   Note: For player code, we can easily implement login. and store things like wins loses and decks stored right in the DB.

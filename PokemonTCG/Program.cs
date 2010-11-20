@@ -118,6 +118,13 @@ namespace PokemonTCG
                 {
                     playAgain = false;
                 }
+				else
+				{
+					//TODO: Change chainload
+					//TODO take into consideration that the other information about a player needs to be considered as well 
+					player1 = new Player(player1.getName(), chainload(deckpath));
+					player2 = new Player(player2.getName(), chainload(deckpath));
+				}
             } while (playAgain);
         }
 
@@ -755,6 +762,7 @@ namespace PokemonTCG
 		//TODO: Fix this code. (maybe make it an option?)
 		private static Card[] chainload(string deckpath)
 		{
+			//Choose a CSV File -> Parse the CSV -> Convert the int array to card objects -> return card array.
 			return intArrayDeck(LoadDeck2(deckpath, chooseDeck(deckpath)));
 			
 		}

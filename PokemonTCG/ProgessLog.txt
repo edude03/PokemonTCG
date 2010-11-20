@@ -48,3 +48,5 @@
 		   Note: For player code, we can easily implement login. and store things like wins loses and decks stored right in the DB.
 		   Removed the old parser code
 		   Mostly extracted the methods, see todos in program. 
+		   
+[11/18/10] Fixed Play again (though it incorperates chainload() which isn't optimal.

@@ -50,3 +50,6 @@
 		   Mostly extracted the methods, see todos in program. 
 		   
 [11/18/10] Fixed Play again (though it incorperates chainload() which isn't optimal.
+		   Done: TODO: Decouple Card() from the database code. 
+		   Removed old deck code
+	

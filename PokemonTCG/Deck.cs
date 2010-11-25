@@ -50,7 +50,7 @@ namespace PokemonTCG
             //Makes sure the deck is created with only the amount of cards that where passed in.
             
 
-            intDeck = Program.LoadDeck2(deckpath, deckname);
+            intDeck = Program.LoadDeck(deckpath, deckname);
             this.Size = intDeck.Length;
       
             //Init the cards to their proper values

@@ -360,100 +360,6 @@ namespace PokemonTCG
             //choosecard method will be launched before the setActPKM command
             player1.isFirstTurn = false;
         }
-    
-        /*
-        #region LoadDeck
-        public static int[] LoadDeck(string deckpath, string deckname)
-        {
-            int[] LoadDeck;
-            int[] returnError = { -1 };
-
-            try
-            {
-                int i = 0;
-                int j = 0;
-                StreamReader objReader = new StreamReader(deckpath + deckname);
-                string strContents = objReader.ReadToEnd();
-                objReader.Close();
-                string[] itemsRead = strContents.Split(new char[] { ',' });
-                int[] intLoadDeck = new int[Information.UBound(itemsRead, 1) + 1];
-
-                if (Information.UBound(itemsRead, 0) > 0)
-                {
-                    while (!((i == 60) | (i == itemsRead.Length)))
-                    {
-                        if (Conversions.ToDouble(itemsRead[i]) > 4086.0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("The Value " + itemsRead[i] + " Cannot be used an is invalid");
-                            Console.ResetColor();
-                        }
-                        else if (Conversions.ToDouble(itemsRead[i]) <= 0.0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("The Value " + itemsRead[i] + " Cannot be used an is invalid");
-                            Console.ResetColor();
-                        }
-                        else
-                        {
-                            intLoadDeck[i] = int.Parse(itemsRead[i]);
-                        }
-                        i++;
-                    }
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Sorry, this deck cannot be used as it has less than 1 card");
-                    Console.ResetColor();
-                    return returnError;
-                }
-
-                int k = Information.UBound(intLoadDeck, 1) - 1;
-                for (i = 0; i <= k; i++)
-                {
-                    if (intLoadDeck[i] == 0)
-                    {
-                        int firstI = i;
-                        j = i;
-                        while (!((intLoadDeck[j] > 0) | (j == Information.UBound(intLoadDeck, 1))))
-                        {
-                            j++;
-                        }
-                        intLoadDeck[firstI] = intLoadDeck[j];
-                        intLoadDeck[j] = 0;
-                    }
-                }
-                j = Information.UBound(intLoadDeck, 1);
-                while (intLoadDeck[j] <= 0)
-                {
-                    j--;
-                }
-                if ((j + 1) < Information.UBound(intLoadDeck, 1))
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("\r\n");
-                    Console.WriteLine(
-                        "The deck contained a number of invalid values, or was too large therefore the deck has been shrunk to " +
-                        int.parse((int) (j + 1)) + " cards.");
-                }
-                intLoadDeck = (int[]) Utils.CopyArray((Array) intLoadDeck, new int[j + 1]);
-
-
-                LoadDeck = intLoadDeck;
-            }
-            catch (FormatException exception1)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("Sorry, the deck you have selected is invalid, please select a different one");
-                Console.ResetColor();
-                LoadDeck = returnError;
-            }
-            return LoadDeck;
-        }
-        #endregion
-         * */
-		
 
         public static string chooseDeck(string deckPath)
         {
@@ -579,7 +485,7 @@ namespace PokemonTCG
             //--Heads player1, Tails Player2
         }
 
-        public static int[] LoadDeck2(string deckpath, string deckname)
+        public static int[] LoadDeck(string deckpath, string deckname)
         {
             int[] returnError = { -1 };
 
@@ -763,7 +669,7 @@ namespace PokemonTCG
 		private static Card[] chainload(string deckpath)
 		{
 			//Choose a CSV File -> Parse the CSV -> Convert the int array to card objects -> return card array.
-			return intArrayDeck(LoadDeck2(deckpath, chooseDeck(deckpath)));
+			return intArrayDeck(LoadDeck(deckpath, chooseDeck(deckpath)));
 			
 		}
 		

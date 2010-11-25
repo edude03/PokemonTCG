@@ -194,7 +194,6 @@ namespace PokemonTCG
 		
 		//TODO: Fix cards to not be initalized on construtor call?
 		//TODO: Make card (or its int method) accept a database object and the BOGUS_ID to allow the DB to be opened and closed outside the loop
-		//TODO: Decouple Card() from the database code. 
 		//TODO: make a generic database access method instead of mongo
         //Constructor
         /// <summary>

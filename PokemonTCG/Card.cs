@@ -16,6 +16,7 @@ using Microsoft.VisualBasic;
 
 namespace PokemonTCG
 {
+	//TODO: Considering adding a method for managing energies?
     public class Card
     {
 
@@ -23,12 +24,14 @@ namespace PokemonTCG
         //Since this code wasn't designed with encapsulation in mind, all the 
         //variables are public, however this should be changed later.
 		//TODO: Just realized that cards data is overwritten, which means that certain scripts won't work.
+		//TODO: Rename Variables and remove / fix get/sets
         public int BOGUS_ID;
         public string Name;
         public int HP;
         public Enums.Stage stage;
         public string Weakness;
         public string Resistance;
+		public int retreatCost; 
         public Enums.Element type;
         public Enums.Condition Status; //TODO: ensure that you can have mutliple statuses at the same time. 
         public List<Card> attached = new List<Card>();
@@ -170,7 +173,7 @@ namespace PokemonTCG
             
         Random rnd = new Random();
 
-        public bool meetsCrit(params Pair[] specs)
+        public bool meetsCrit(List<Pair> specs)
         {
             foreach (Pair i in specs)
             {
@@ -234,10 +237,16 @@ namespace PokemonTCG
         }
 
         //Methods
+        /// <summary>
+        /// Overloaded Method for getAttack; returns the amount of damage that an attack does
+        /// </summary>
+        /// <param name="atk">An integer related to which attack to execute</param>
+        /// <returns>The amount of damanage an attack does</returns>
         public int getAttack(int atk)
         {
             return getAttack(this.atk[atk]);
         }
+		
 
         public int getAttack(Attack atk)
         {

@@ -27,6 +27,7 @@ namespace PokemonTCG
                 List<char> energy = new List<char>();
                 for (int i = 1; i < info.IndexOf(']'); i++)
                 {
+					//TODO: Fix areas of code that make assumptions like this. 
                     energy.Add(info[i]);
                 }
 

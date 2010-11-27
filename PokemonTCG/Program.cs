@@ -20,6 +20,7 @@ namespace PokemonTCG
         //Variables
         private static bool gameInPlay = true;
         private static bool playAgain = true;
+		private static bool done = false;
         private static Player player1, player2;
 		private static string deckpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "decks" + Path.DirectorySeparatorChar;
 		private static string deckname;
@@ -100,14 +101,14 @@ namespace PokemonTCG
             {
                 do
                 {
-                    menu(player1, player2);
+                    TCGMenu(player1, player2);
                     //Incase the game ends while on the first player
                     if (!gameInPlay)
                     {
                         break;
                     }
 
-                    menu(player2, player1);
+                    TCGMenu(player2, player1);
                 } while (gameInPlay);
 
                 Console.WriteLine("Do you want to play again?");
@@ -126,164 +127,6 @@ namespace PokemonTCG
 					player2 = new Player(player2.getName(), chainload(deckpath));
 				}
             } while (playAgain);
-        }
-
-        public static void menu(Player player1, Player player2)
-        {
-            bool draw = true;
-            Card mycard;
-
-            if (player1.isFirstTurn)
-            {
-                firstTurn(player1);
-            }
-            Console.WriteLine("ACK: {0} ||  HP: {1}, || Status: {2}", player1.actPkm.Name,
-                              (player1.actPkm.HP).ToString(), player1.actPkm.Status);
-            if (draw)
-            {
-                player1.draw();
-                draw = false;
-            }
-
-
-            Console.WriteLine("{0} Drew {1}", player1.getName(), player1.getLastCard().Name);
-            Console.ResetColor();
-            Console.WriteLine("\r\n");
-            Console.WriteLine("[{0}]", player1.getName());
-            Console.Write("1. Hand\t\n");
-            Console.Write("2. Check\r\n");
-            Console.Write("3. Hand\r\n");
-            Console.Write("4. Retreat\r\n");
-            Console.Write("5. Pkm Power\r\n");
-            Console.Write("6. Lookup **demo function**\r\n");
-            Console.Write("7. Done\r\n");
-            Console.Write("8. Attach\n");
-            Console.Write("Enter selection here: ");
-			int inputC = getValidUserInput(1, 8);
-            Console.Write("\r\n");
-
-            switch (inputC)
-            {
-                case 1:
-                    {
-                        if (player1.actPkm.Name == null)
-                        {
-                            Console.WriteLine("Please play an active pokemon");
-                            player1.setACTPKM(player1.chooseCard());
-
-                            //If its not a basic pokemon,
-                            if ((player1.actPkm.Stage != "Basic") | (player1.actPkm.Stage == "Trainer"))
-                            {
-                                //Force the user to choose a nother card
-                                Console.Write("Sorry that selection is invalid");
-                                player1.setACTPKM(player1.chooseCard());
-                            }
-                        }
-                        Console.WriteLine("please choose an attack");
-                        Console.WriteLine("0: {0}, Damage: {1}", player1.actPkm.atk[0].name,
-                                          player1.actPkm.atk[0].damage);
-                        if (player1.actPkm.atk[1] != null)
-                        {
-                            Console.WriteLine("1: {0}, Damage: {1}", player1.actPkm.atk[1].name,
-                                              player1.actPkm.atk[1].damage);
-                        }
-						int atk = player1.actPkm.atk[1] != null ? getValidUserInput(0, 1) : getValidUserInput(0, 0);
-
-                        if (player2.isFirstTurn)
-                        {
-                            Console.WriteLine("Sorry, You cannot attack as they have not played an active pokemon");
-                        }
-                        else
-                        {
-                            //Check if the player's pokemon has status issues
-                            //Do it later since there isn't energies or status problems yet : /
-
-                            //Subtract the attack damage from the players HP, though take resistance and weakness into account.
-                            int lostHealth = player1.actPkm.getAttack(atk);
-                            player2.actPkm.HP -= lostHealth;
-
-                            Console.WriteLine("{0} used {1}!", player1.actPkm.Name, player1.actPkm.atk[atk].name);
-                            Console.WriteLine("{0}'s {1} lost {2} health", player2.getName(), player2.actPkm.Name,
-                                              lostHealth);
-
-
-                            if (player2.actPkm.HP <= 0)
-                            {
-                                Console.WriteLine("{0}'s {1} has fainted", player2.getName(), player2.actPkm.Name);
-                                //Actually it should be sent to the discard
-                                player2.setACTPKM(null);
-
-                                if (player2.Bench.Count == 0)
-                                {
-                                    Console.WriteLine("Congratulations {0}! You win!", player1.getName());
-                                }
-                                gameInPlay = false;
-                            }
-                        }
-                        player1.isTurn = false;
-                        break;
-                    }
-
-                case 2:
-                    {
-                        int L1 = player1.Hand.Count;
-                        for (int i = 0; i <= L1; i++)
-                        {
-                            Console.Write("HP: {0}, Resistance: {1}, Stage: {2}" + player1.Hand[i].Stage);
-                            Console.WriteLine("\r\n");
-                        }
-                        break;
-                    }
-                case 3:
-                    {
-                        //L2 equal to the number of cards in the struct
-                        int L2 = player1.Hand.Count;
-                        for (int i = 0; i <= L2; i++)
-                        {
-                            Console.WriteLine("Name: " + player1.Hand[i].Name);
-                            Console.WriteLine("HP: {0} " + player1.Hand[i].HP.ToString() + " Resistance: " +
-                                              player1.Hand[i].Resistance + " Stage : " + player1.Hand[i].Stage);
-                            Console.WriteLine("\r\n");
-                        }
-                        break;
-                    }
-                case 4:
-                    Console.Write("This function has not been implemented");
-                    break;
-
-                case 5:
-                    break;
-				
-				
-				//Todo: Create a new pokedex function 
-				
-                case 6: break;
-				/*
-                    {
-                        Console.WriteLine("Please enter a number between 0 and 4086");
-                        int demo = Conversions.ToInteger(Console.ReadLine());
-                        //mycard = new Card(demo);
-                        Console.WriteLine(mycard.Name);
-                        Console.WriteLine("HP: " + mycard.HP.ToString() + " Resistance: " + mycard.Resistance +
-                                          " Stage :" + mycard.Stage);
-                        Console.WriteLine("\r\n");
-                        break;
-                    }
-                    */
-				
-                case 7:
-                    player1.isTurn = false;
-                    return;
-
-                case 8:
-					attach(player1);
-                    break;
-
-                default:
-                    Console.WriteLine("You must enter the one of the values.");
-                    break;
-            }
-            draw = true;
         }
 
         private static void attach(Player player1)
@@ -431,30 +274,168 @@ namespace PokemonTCG
             }
             return inputC;
         }
+		
+		public static void printCards(List<Card> input)
+		{
+			int i = 0;
+			foreach (Card c in input)
+			{
+				i++;
+				Console.Write("{0}: {1}", i, c.Name);
+			}
+		}
+		
+		public static void check(Card c)
+		{
+			
+		}
+		
+		public static string getStatus(Card c)
+		{
+			string status = c.Name + " || HP: " + c.HP + " Status: " + c.Status;  
+			return status;
+		}
+		
+		public static void menu_Hand(Player curPlayer)
+		{
+			//Show the user all of their cards.
+				printCards(curPlayer.Hand);
+			
+			//The user can chose any of there cards
+				int chosen = getValidUserInput(1, curPlayer.Hand.Count); //Number of cards in your hand lol
+			//If the user chooses a card
+				//If the card is a basic pokemon 
+			
+				if (curPlayer.Hand[chosen].stage == Enums.Stage.Basic)
+				{
+					//Allow user to check, put on bench or go back
+					Console.WriteLine("1. Check \n 2. Bench 3. \n Back \n");
+					switch (getValidUserInput(1,3))
+					{
+						case 1:
+						check(curPlayer.Hand[chosen]);
+						break;
+						
+						case 2:
+						curPlayer.move(curPlayer.Hand, chosen, curPlayer.Bench);
+						break;
+					
+						case 3: break;
+					}
+				}
+				else if (curPlayer.Hand[chosen].stage == Enums.Stage.Trainer)
+				{
+					Console.WriteLine("Sorry Trainers haven't been implemented yet");
+				}
+				else if (curPlayer.Hand[chosen].stage == Enums.Stage.Energy)
+			    {
+					//If this is the first energy attached
+					if (curPlayer.isFirstEnergy == true)
+					{
+						//Allow the user to attach the card to a Pokemon
+						Console.WriteLine("Please pick a pokemon to attach this to");
+						printCards(curPlayer.Bench); //<-- TODO: Code something incase there is nothing in the bench or other card source
+						curPlayer.isFirstEnergy = false;
+					}
+					else
+					{
+						//Tell them they can't do it and go back
+						Console.WriteLine("Sorry, you can only attach one energy per turn");
+					}
+				}
+				//If it is some other card
+				else
+				{
+					//Check if it is an evolution and allow the user to change it out?
+					Console.WriteLine("Sorry, I'm still working on evolutions as well ;_;"); //TODO: Write evolution code 
+				}
+			
+		}
 
-        public static void TCGMenu()
+        public static void TCGMenu(Player curPlayer, Player player2)
         {
+			do {
+			done = false; //The menu loops until the player is done. 
+				
             Console.WriteLine("1. Hand\t 2. Check\t 3.Retreat");
             Console.WriteLine("4. Attack\t 5.Pkmn Power\t 6.Done");
 			switch (getValidUserInput(1,6))
             {
-                case 1: //Hand
-                    break;
-                case 2: //Check
-                    break;
-                case 3: //retreat
-                    break;
-                case 4: // Attack
-                    break;
-                case 5: // Pkm Power
-                    break;
-                case 6://done
-                    break;
-                    
-            }
+                case 1: //If the user picks Hand
+				menu_Hand(curPlayer);
+				break;
+	
+				case 2: //If the user picks Check
+					//Show the user data on whatever card they choose?
+				break;
+					
+				case 3: //If the user picks Retreat
+					//Check if the user can ever retreat
+					if (curPlayer.retreat()) //If the retreat is sucsessful 
+					{
+						Console.WriteLine("Card retreated, please pick a new active pokemon");
+						//Chose a card from player 1s hand 
+						curPlayer.makeActPkm(curPlayer.Bench, choosecard(curPlayer.Bench));
+					}
+					else
+					{
+						Console.WriteLine("Sorry, you don't have enough energies to retreat");
+					}
+				break;
+				
+				case 4: //If the user picks Attack
+					//Make sure they have an active pokemon
+				if (curPlayer.actPkm == null)
+				{
+					//if the user doesn't have an active pokemon
+							//Tell them they are a dumbass
+					Console.WriteLine("You need to have an active pokemon to attack");
+				}
+				else
+				{
+					//Let the user pick an attack
+					Console.WriteLine("0: {0}, Damage: {1}", curPlayer.actPkm.atk[0].name, curPlayer.actPkm.atk[0].damage);
+                    if (curPlayer.actPkm.atk[1] != null)
+                    {
+                       Console.WriteLine("1: {0}, Damage: {1}", curPlayer.actPkm.atk[1].name, curPlayer.actPkm.atk[1].damage);
+                    }
+                    int chosen = getValidUserInput(1, 2);
+                    if (curPlayer.actPkm.meetsCrit(curPlayer.actPkm.atk[chosen].requirements))
+                    {
+                        //They have enough energies execute that b**ch
+                        player1.actPkm.HP -= player1.actPkm.getAttack(chosen);
+                        done = true;
+                    }
+                    else
+                    {
+                        //Remind the user that they were an accident in life
+                        Console.WriteLine("Sorry you don't have enough energies to execute this attack");
+                    }
 
-            
-        }
+                    /* I like this code sinpette for some reason.
+					// if (atk[1] != null) { atk = getValidUserInput(0, 1)} else {atk = getValidUserInput(0, 0)}
+						int atk = curPlayer.actPkm.atk[1] != null ? getValidUserInput(0, 1) : getValidUserInput(0, 0);
+						*/ 	    
+				}
+
+					
+					//Check if they have enough energies to make the attack
+						//If they do execute the attack
+					
+						//End their turn 
+						//else tell them they are a dumbass and go back to the menu
+				break;
+				
+				case 5: //Pokemon Power 
+				//Not Implemented Yet
+				break;
+				
+				case 6: //Done
+                done = true;
+				break;               
+			} 
+		} while (!done);
+		}
 
         public static void setup(Player currentPlayer)
         {
@@ -471,11 +452,7 @@ namespace PokemonTCG
 			
 			//TODO: Move first turn code over here. 
             //Pick a basic pokemon (Hand to active)
-            
-			//Play
-            //--Puts a card whereever is supposed to go
-            //Check
-            //--Displays stats on the pokemon
+           
 
             //Up to 5 basic pkm on the bench
 
@@ -520,33 +497,6 @@ namespace PokemonTCG
                         intLoadDeck.Add(temp);
                     }
                 }
-
-
-                #region CPWay
-
-                //The C++ way to do it, but lets use C# methods
-                /* 
-                int[] intLoadDeck = new int[numRecords];
-
-                for (i = 0; i < numRecords; i++)
-                {
-                    //Used to hold the converted int while we decide what to do with it
-                    int tempInt;
-
-                    tempInt = int.Parse(itemsRead[i]);
-
-                    if (tempInt < MIN || tempInt > MAX)
-                    {
-                        intLoadDeck[i] = 0;
-                        invalid++;
-
-                    }
-                    else
-                    {
-                        intLoadDeck[i] = tempInt;
-                    }
-                 * */
-                #endregion
 
                 return intLoadDeck.ToArray();
             }

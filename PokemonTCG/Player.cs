@@ -32,6 +32,7 @@ namespace PokemonTCG
         private Deck deck;
         public bool isFirstTurn = true;
         public bool pickPKM = false;
+		public bool isFirstEnergy = false;
 
         //Player may get a key section for encrypting and decryting keys
      
@@ -109,21 +110,6 @@ namespace PokemonTCG
         /// Takes the top card from the deck and passes it to the calling method.
         /// </summary>
        
-	/*		
-	  public void draw(int n)
-        {
-            if (n == 1)
-            {
-
-            }
-            for (int i = 0; i < n; i++)
-            {
-                this.Hand[counter] = deck.draw();
-                counter++;
-            }
-            
-        }
-        */
 		
 		public void shuffleDeck()
 		{
@@ -172,9 +158,9 @@ namespace PokemonTCG
         /// Removes all cards from the hand List
         /// </summary>
         public void DiscardHand()
-       {
+        {
            Hand.Clear();
-       }
+        }
 
         /// <summary>
         /// Ecapsulated method
@@ -255,6 +241,51 @@ namespace PokemonTCG
 			{
 				Prizes.Add(deck.draw());
 			}
+		}
+		
+		//This method seems useless however it is also used for active pokemon which is a card type instead of a list
+		//Therefore it's usefull there. 
+		public void move(Card c, List<Card> dest)
+		{
+			dest.Add(c);
+			c = null; //Are objects passed by ref in C#? //Todo: find out
+		}
+		
+		public void move(List<Card> source, int index, List<Card> dest)
+		{
+			move(source[index], dest);
+			source.RemoveAt(index);
+		}
+		
+		//Realized you can only retreat the actPKm so no point having parameters :P
+		public bool retreat() //Todo: Fix this method; it assumes that the only thing that can be attached is energies. 
+		{					  
+			//Check if the retreat cost can be met
+		 	if (actPkm.attached.Count > actPkm.retreatCost)
+			{
+				//If it can remove the number of cards from the attached
+				for (int i = 0; i < actPkm.retreatCost; i++)
+				{
+					move(actPkm.attached, 0, Discarded); //Move the first card from the attached array to discarded. 
+				}
+				
+				//Move the card to the bench
+				move(actPkm, Bench); 
+				actPkm = null;
+				
+				return true; //<-- The operation was sucsessful 
+			}
+			else
+			{
+				return false; //<-- The requirements for the retreat cost were not met
+			}
+				
+		}
+		
+		public void makeActPkm(List<Card> input, int index)
+		{
+			this.actPkm = input[index];
+			input.RemoveAt(index);
 		}
 		
   }

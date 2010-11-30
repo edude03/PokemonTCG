@@ -63,12 +63,25 @@ namespace PokemonTCG
 			
 			//Instanate the connection 
 			Mongo mongo = new Mongo();
+			
+			try 
+			{
 			mongo.Connect();
 			
-            for (int k = 0; k < Size; k++)
-            {
-                this.deck[k] = new Card(this.intDeck[k], mongo);
-            }
+            	for (int k = 0; k < Size; k++)
+            	{
+               		 this.deck[k] = new Card(this.intDeck[k], mongo);
+            	}
+			}
+			catch (MongoDB.MongoConnectionException m)
+			{
+				("Error: {0} Please try again.", m.ToString());
+				System.Environment.Exit(-1);
+			}
+			finally
+			{
+				mongo.Disconnect();
+			}
 			
 			//Close the connection
 			mongo.Disconnect();

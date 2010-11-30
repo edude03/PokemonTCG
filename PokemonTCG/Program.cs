@@ -147,63 +147,7 @@ namespace PokemonTCG
                 player1.Hand.Add(temp);
             }
         }
-
-        public static void firstTurn(Player player1)
-        {
-            int choosen = 0;
-            Card chsn;
-            bool bench = true;
-            bool bCont = true;
-
-            // The user wants to put cards in their bench
-            while (bench == true)
-            {
-                Console.WriteLine("Please select a card to put on your bench (" + player1.getName() + ")" + ControlChars.NewLine);
-                //choosen = choosecard(player1.Hand);
-
-                if (!(choosen == -1))
-                {
-                    do
-                    {
-                        chsn = player1.chooseCard();
-                        if (chsn == null || chsn.Stage != "Basic")
-                        {
-                            Console.WriteLine("The selection was invalid, please slect a basic pokemon");
-
-                            //Put the card back in the hand
-                            player1.Hand.Add(chsn);
-                        }
-                        else
-                        {
-                            player1.Bench.Add(chsn);
-                            bCont = false;
-                        }
-                    } while (bCont);
-                }
-                else if (choosen == -1)
-                {
-                    bench = false;
-                    break; // TODO: might not be correct. Was : Exit While
-                }
-                Console.WriteLine("Would you like to put another card on the bench?" + ControlChars.NewLine);
-                string inputCs = Console.ReadLine();
-
-                if (inputCs.ToLower() == "no" | inputCs.ToLower() == "n")
-                {
-                    bench = false;
-                }
-            }
-            //Tell the player to select an active pokemon
-
-            Console.WriteLine("Please select an active pokemon");
-
-            //Call the overloaded chooseCard method which will iterate the cards in the source (bench)
-            player1.setACTPKM(player1.chooseCard(player1.Bench));
-
-            //choosecard method will be launched before the setActPKM command
-            player1.isFirstTurn = false;
-        }
-
+     
         public static string chooseDeck(string deckPath)
         {
             string strDeckChoosen = "";
@@ -281,7 +225,8 @@ namespace PokemonTCG
 			foreach (Card c in input)
 			{
 				i++;
-				Console.Write("{0}: {1}", i, c.Name);
+				Console.Write("{0}: {1} ", i, c.Name);
+				Console.Write("\n");
 			}
 		}
 		
@@ -354,9 +299,32 @@ namespace PokemonTCG
 
         public static void TCGMenu(Player curPlayer, Player player2)
         {
+			//If the player hasn't drawn yet (this turn):
+			if (curPlayer.hasDrawn == false)
+			{
+				//Deck will return the topmost card in the deck so add it to the Hand (straight forward)
+				curPlayer.Hand.Add(curPlayer.draw());
+				
+				//Set player hasDrawn to true so that they don't draw again.
+				curPlayer.hasDrawn = true;
+				
+				//Print the name of the card they drew.
+				Console.WriteLine("{0} drew {1}", curPlayer.getName(), curPlayer.getLastCard().Name);
+
+			}
+				
+			
 			do {
 			done = false; //The menu loops until the player is done. 
+			if (curPlayer.actPkm == null)
+			{
+					Console.WriteLine("[{0}]", curPlayer.getName());
+					Console.WriteLine("Please pick an active Pokemon:");
+					curPlayer.makeActPkm(curPlayer.Hand, choosecard(curPlayer.Hand));
+					
+			}
 				
+			Console.WriteLine("[{0}, Active PKM: {1}]", curPlayer.getName(), getStatus(curPlayer.actPkm));
             Console.WriteLine("1. Hand\t 2. Check\t 3.Retreat");
             Console.WriteLine("4. Attack\t 5.Pkmn Power\t 6.Done");
 			switch (getValidUserInput(1,6))
@@ -403,7 +371,7 @@ namespace PokemonTCG
                     if (curPlayer.actPkm.meetsCrit(curPlayer.actPkm.atk[chosen].requirements))
                     {
                         //They have enough energies execute that b**ch
-                        player1.actPkm.HP -= player1.actPkm.getAttack(chosen);
+                        player2.actPkm.HP -= player1.actPkm.getAttack(chosen);
                         done = true;
                     }
                     else
@@ -435,6 +403,7 @@ namespace PokemonTCG
 				break;               
 			} 
 		} while (!done);
+				curPlayer.hasDrawn = false;
 		}
 
         public static void setup(Player currentPlayer)
@@ -447,11 +416,61 @@ namespace PokemonTCG
 			
 			//Place Prizes
 			currentPlayer.initPrizes(6);
-			
-			//--For now, right here the "firstTurn" code is run
-			
-			//TODO: Move first turn code over here. 
+						
             //Pick a basic pokemon (Hand to active)
+			int choosen = 0;
+           	Card chsn;
+           	bool bench = true;
+           	bool bCont = true;
+
+           // The user wants to put cards in their bench
+		   /* --- Code beyond this point is a cluster**** and I barely know what it does anymore :/ --- */
+           while (bench == true)
+           {
+               Console.WriteLine("Please select a card to put on your bench (" + player1.getName() + ")");
+
+               if (choosen != -1)
+               {
+                   do
+                   {
+                       chsn = player1.chooseCard();
+                       if (chsn == null || chsn.Stage != "Basic")
+                       {
+                           Console.WriteLine("The selection was invalid, please slect a basic pokemon");
+
+                           //Put the card back in the hand
+                           player1.Hand.Add(chsn);
+                       }
+                       else
+                       {
+                           player1.Bench.Add(chsn);
+                           bCont = false;
+                       }
+                   } while (bCont);
+               }
+               else if (choosen == -1)
+               {
+                   bench = false;
+                   break; // TODO: might not be correct. Was : Exit While
+               }
+               Console.WriteLine("Would you like to put another card on the bench?");
+               string inputCs = Console.ReadLine();
+
+               if (inputCs.ToLower() == "no" | inputCs.ToLower() == "n")
+               {
+                   bench = false;
+               }
+           }
+           //Tell the player to select an active pokemon
+
+           Console.WriteLine("Please select an active pokemon");
+
+           //Call the overloaded chooseCard method which will iterate the cards in the source (bench)
+           player1.setACTPKM(player1.chooseCard(player1.Bench));
+
+           //choosecard method will be launched before the setActPKM command
+           player1.isFirstTurn = false;
+       		}
            
 
             //Up to 5 basic pkm on the bench
@@ -559,6 +578,8 @@ namespace PokemonTCG
 			//A universal connection is created outside the loop, then closed after the deck is created. 
 			//Instanate the connection 
 			Mongo mongo = new Mongo();
+			
+		try{
 			mongo.Connect();
 			
             for (int k = 0; k < Size; k++)
@@ -567,9 +588,20 @@ namespace PokemonTCG
             }
 			
 			//Close the connection
-			mongo.Disconnect();
+			}
+			catch (MongoDB.MongoConnectionException)
+			{
+				Console.WriteLine("Error: Unable to connect to the database, please try again.");
+				deck = null;
+				System.Environment.Exit(-1);
+			}
+			finally
+			{
+				mongo.Disconnect();
+			}
 			
 			return deck;
+
 		}
 		
 		public static Card getCardFromDB(int BOGUS_ID, Mongo mongo) 

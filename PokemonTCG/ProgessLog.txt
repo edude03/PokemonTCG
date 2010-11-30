@@ -52,4 +52,23 @@
 [11/18/10] Fixed Play again (though it incorperates chainload() which isn't optimal.
 		   Done: TODO: Decouple Card() from the database code. 
 		   Removed old deck code
+
+[11/26/10] From the last commit to now the following has been done:
+			Noted some Todos, 
+			changed meetsCrit(); 
+			explained getAttack(), 
+			cleaned up player class,
+			impletemented one energy per turn,
+			implemented move cards between various sources (need to document those) 
+			removed old Menu
+			implemented TCGMenu. 
+			stage two of energy support
+			TODO: Evolutins
+			TODO: energy testing.
+			
+[11/29/10]  Done: Cleaned up firstTurn, fixed mongo crash (sort of), some other stuff that I won't remember till I do the git commit in a minute. 
+			TODO: Finished cleaning up the setup() method: needs to make sure that only 5 pokemanz are put on the bench (though the bench has a capacity of 5, there is no catch if they go over that)
+			TODO: make method that ensures that x type of pokemon is selected for example public bool isStage(Card c, Enums.Stage level) then loop based on it (while !isStage etc) 
+			TODO: Implement a method to determine the game state (ie if a player wins or looses) 
+			TODO: Re-implement attacking. 
 	

@@ -18,11 +18,13 @@ namespace PokemonTCG
         public List<Card> Discarded = new List<Card>(60);
 		public List<Card> Prizes = new List<Card>(6);
 
-
-        public Card actPkm;
+		//Turn use variables
+		public Card actPkm;
         public Boolean isTurn;
-
+		public bool hasDrawn; 
+		
         private string name;
+		
 
         
         private int counter = 0;

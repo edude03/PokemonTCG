@@ -21,7 +21,6 @@ namespace PokemonTCG
         private static bool gameInPlay = true;
         private static bool playAgain = true;
 		private static bool done = false;
-        private static Player player1, player2;
 		private static string deckpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "decks" + Path.DirectorySeparatorChar;
 		private static string deckname;
 
@@ -71,16 +70,16 @@ namespace PokemonTCG
 
 				Console.WriteLine("Please enter your name Player 1");
 				string input = Console.ReadLine();
-				player1 = new Player(input, chainload(PokemonTCG.Program.deckpath));
+				Player player1 = new Player(input, chainload(PokemonTCG.Program.deckpath));
 				setup(player1);
 				
 				Console.WriteLine("Please enter your name Player 2");
 				input = Console.ReadLine();
-				player2 = new Player(input, chainload(PokemonTCG.Program.deckpath));
+				Player player2 = new Player(input, chainload(PokemonTCG.Program.deckpath));
 				setup(player2);
 				
 				//Get the game started.
-				gameLoop();
+				gameLoop(player1,player2);
 			}
 			//TODO: Make the game continue if this is thrown
 			catch (NotImplementedException e)
@@ -95,7 +94,7 @@ namespace PokemonTCG
 			}
         }
 
-        public static void gameLoop()
+        public static void gameLoop(Player player1, Player player2)
         {
             do
             {
@@ -230,6 +229,7 @@ namespace PokemonTCG
 			}
 		}
 		
+		
 		public static void check(Card c)
 		{
 			
@@ -280,7 +280,27 @@ namespace PokemonTCG
 						//Allow the user to attach the card to a Pokemon
 						Console.WriteLine("Please pick a pokemon to attach this to");
 						printCards(curPlayer.Bench); //<-- TODO: Code something incase there is nothing in the bench or other card source
-						curPlayer.isFirstEnergy = false;
+						Console.WriteLine("A for ActivePkm");
+						
+						//The next code block is probably a bad idea TODO: Clean / Fix this. 
+						string temp = Console.ReadLine();
+					   //This exemplfies why getValidUserInput was written in the first place 
+						if (temp != "a" || temp != "A" || int.Parse(temp) > curPlayer.Bench.Count || int.Parse(temp) < 0)//Serious bidness if you enter something wrong here. 
+					   {
+							Console.WriteLine("That input was invalid");
+						}	
+						else if (temp == "A" || temp == "a")
+						{
+							curPlayer.move(curPlayer.Hand,chosen,curPlayer.actPkm.attached); 
+							curPlayer.isFirstEnergy = false;
+						}
+						else 
+						{
+							curPlayer.move(curPlayer.Hand, chosen, curPlayer.Bench[int.Parse(temp)].attached);
+							curPlayer.isFirstEnergy = false; 
+					    }
+						
+						
 					}
 					else
 					{
@@ -297,7 +317,7 @@ namespace PokemonTCG
 			
 		}
 
-        public static void TCGMenu(Player curPlayer, Player player2)
+        public static void TCGMenu(Player curPlayer, Player otherPlayer)
         {
 			//If the player hasn't drawn yet (this turn):
 			if (curPlayer.hasDrawn == false)
@@ -371,7 +391,26 @@ namespace PokemonTCG
                     if (curPlayer.actPkm.meetsCrit(curPlayer.actPkm.atk[chosen].requirements))
                     {
                         //They have enough energies execute that b**ch
-                        player2.actPkm.HP -= player1.actPkm.getAttack(chosen);
+                        otherPlayer.actPkm.HP -= curPlayer.actPkm.getAttack(chosen);
+						if (otherPlayer.actPkm.HP <= 0)
+							{
+								//Bitch fainted. TODO handle it.
+								//Player 2's activePkm goes to discarded pile
+								otherPlayer.discard(otherPlayer.actPkm); 
+								
+								//You get to draw a prize
+								curPlayer.Hand.Add(curPlayer.drawPrize());
+								
+								//If the other player doesn't have any cards on their bench 
+								if (otherPlayer.Bench.Count == 0)
+								{
+									//You win.
+									gameInPlay = false;
+									
+									Console.WriteLine("You win {0}!", curPlayer.getName());
+								}
+								//else do nothing but end the turn
+							}
                         done = true;
                     }
                     else
@@ -383,7 +422,8 @@ namespace PokemonTCG
                     /* I like this code sinpette for some reason.
 					// if (atk[1] != null) { atk = getValidUserInput(0, 1)} else {atk = getValidUserInput(0, 0)}
 						int atk = curPlayer.actPkm.atk[1] != null ? getValidUserInput(0, 1) : getValidUserInput(0, 0);
-						*/ 	    
+						*/
+						
 				}
 
 					
@@ -427,23 +467,20 @@ namespace PokemonTCG
 		   /* --- Code beyond this point is a cluster**** and I barely know what it does anymore :/ --- */
            while (bench == true)
            {
-               Console.WriteLine("Please select a card to put on your bench (" + player1.getName() + ")");
+               Console.WriteLine("Please select a card to put on your bench (" + currentPlayer.getName() + ")");
 
                if (choosen != -1)
                {
                    do
                    {
-                       chsn = player1.chooseCard();
-                       if (chsn == null || chsn.Stage != "Basic")
+					int check = choosecard(currentPlayer.Hand);
+					if (currentPlayer.Hand[check] == null || currentPlayer.Hand[check].Stage != "Basic")
                        {
                            Console.WriteLine("The selection was invalid, please slect a basic pokemon");
-
-                           //Put the card back in the hand
-                           player1.Hand.Add(chsn);
                        }
                        else
                        {
-                           player1.Bench.Add(chsn);
+                           currentPlayer.move(currentPlayer.Hand, check, currentPlayer.Bench);
                            bCont = false;
                        }
                    } while (bCont);
@@ -456,21 +493,23 @@ namespace PokemonTCG
                Console.WriteLine("Would you like to put another card on the bench?");
                string inputCs = Console.ReadLine();
 
+			   //Convert the input to lowercase so that we have less possibilties that they can enter.
                if (inputCs.ToLower() == "no" | inputCs.ToLower() == "n")
                {
                    bench = false;
                }
            }
+			
            //Tell the player to select an active pokemon
 
            Console.WriteLine("Please select an active pokemon");
 
            //Call the overloaded chooseCard method which will iterate the cards in the source (bench)
-           player1.setACTPKM(player1.chooseCard(player1.Bench));
+           currentPlayer.setACTPKM(currentPlayer.chooseCard(currentPlayer.Bench));
 
            //choosecard method will be launched before the setActPKM command
-           player1.isFirstTurn = false;
-       		}
+           currentPlayer.isFirstTurn = false;
+       		
            
 
             //Up to 5 basic pkm on the bench
@@ -484,16 +523,10 @@ namespace PokemonTCG
         public static int[] LoadDeck(string deckpath, string deckname)
         {
             int[] returnError = { -1 };
+			int numRecords; 
 
             try
             {
-                //Loop counters
-                int i = 0;
-                int j = 0;
-
-                int numRecords = 0;
-                int invalid = 0;
-
                 const int MIN = 1;
                 const int MAX = 4086;
 
@@ -524,6 +557,15 @@ namespace PokemonTCG
                 return returnError;
             }
         }
+					
+		public static bool isValidUserInput(int intInput, int lowerBounds, int upperBounds)
+	    {
+			if (intInput <= upperBounds && intInput >= lowerBounds)
+			{
+				return true;
+			}
+				return false;
+		}
 
 		/// <summary>
 		/// Makes sure the input is within the bounds. 
@@ -537,6 +579,7 @@ namespace PokemonTCG
 		/// <returns>
 		/// A <see cref="System.Int32"/> equal to th input (assuming it's valid) 
 		/// </returns>
+		/// Might cause a fenchpost error but I'll look into that later TODO: <-- that.
 		public static int getValidUserInput(int lowerBounds, int upperBounds)
 		{
 			bool validInput = false;
@@ -547,7 +590,7 @@ namespace PokemonTCG
 				try
 				{
 					int intInput = int.Parse(Console.ReadLine());
-					if (intInput <= upperBounds && intInput >= lowerBounds)
+					if (isValidUserInput(intInput, lowerBounds, upperBounds))
 					{
 						intOut = intInput;
 						validInput = true;

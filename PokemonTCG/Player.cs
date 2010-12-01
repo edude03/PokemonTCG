@@ -126,6 +126,27 @@ namespace PokemonTCG
         {
             return deck.draw();
         }
+		
+		//Overloaded because eventually you should be able to draw your own prize
+		public Card drawPrize(int i)
+		{
+			//Store the card safely befoe we remove it
+			Card temp = this.Prizes[i];
+			
+			//Remove the card from the prizes
+			this.Prizes.RemoveAt(i); 
+			
+			//Return it to the calling method
+			return temp;
+		}
+		
+		
+		public Card drawPrize()
+		{
+			//Returns the first card in prizes. 
+			return drawPrize(0); 
+		}
+		
         
         /// <summary>
         /// Returns the last card that was added to the List so that information 
@@ -140,17 +161,24 @@ namespace PokemonTCG
         /// <summary>
         /// Puts the card that was passed in into the discarded array.
         /// </summary>
-        public void discard(Card card)
+        public void discard(List<Card> source, int index)
         {
-            throw new System.NotImplementedException();
+			//Hows this for DRY? 
+            move(source, index, Discarded);
         }
+		
+		public void discard(Card c)
+		{
+			//Probably passing in the actPKM in this case
+			move(c, Discarded);
+		}
 
         public void setACTPKM(Card card)
         {
             this.actPkm = card;
         }
 
-
+		//This is a repeat of makeActPKM?	
         public void addCard(Card card)
         {
             this.Hand.Add(card);
@@ -259,6 +287,7 @@ namespace PokemonTCG
 			source.RemoveAt(index);
 		}
 		
+		
 		//Realized you can only retreat the actPKm so no point having parameters :P
 		public bool retreat() //Todo: Fix this method; it assumes that the only thing that can be attached is energies. 
 		{					  
@@ -288,6 +317,48 @@ namespace PokemonTCG
 		{
 			this.actPkm = input[index];
 			input.RemoveAt(index);
+		}
+		
+		
+		public void attachEnergy(Card c, List<Card> source)
+		{
+			Predicate<Card> energy = new Predicate<Card>(isEnergy);
+			//If an energy card exists in the source:
+			if(source.Exists(energy))
+			{
+				//Keeps track of the index of the card in the array 
+				int i = 0;
+				//Keeps track of the number of energies in the players hand.
+				int j = 0;
+				//Takes the return from getValidInput();
+				int chosen = 0;
+				Console.WriteLine("Pick an energy:");
+				foreach (Card lCard in source) //I know that is a weird variable name but I was hoping to keep it from being confusing
+				{
+					i++;
+					if(isEnergy(lCard))
+					{
+						j++;
+						Console.WriteLine("{0}: {1}", i, lCard.Name);
+					}
+				}
+				chosen = Program.getValidUserInput(0,j);
+				move(source, chosen, c.attached);
+			}
+			else
+			{
+				Console.WriteLine("You have no enegeries in your hand");
+			}
+		}
+			              
+		private bool isEnergy(Card c)
+		{
+			if (c.stage == Enums.Stage.Energy)
+			{
+				return true;
+			}
+			//Else
+				return false; 
 		}
 		
   }

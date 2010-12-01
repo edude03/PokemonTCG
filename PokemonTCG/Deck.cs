@@ -75,7 +75,7 @@ namespace PokemonTCG
 			}
 			catch (MongoDB.MongoConnectionException m)
 			{
-				("Error: {0} Please try again.", m.ToString());
+				Console.WriteLine("Error: {0} Please try again.", m.ToString());
 				System.Environment.Exit(-1);
 			}
 			finally

@@ -387,7 +387,7 @@ namespace PokemonTCG
                     {
                        Console.WriteLine("1: {0}, Damage: {1}", curPlayer.actPkm.atk[1].name, curPlayer.actPkm.atk[1].damage);
                     }
-                    int chosen = getValidUserInput(1, 2);
+                    int chosen = getValidUserInput(0, 1);
                     if (curPlayer.actPkm.meetsCrit(curPlayer.actPkm.atk[chosen].requirements))
                     {
                         //They have enough energies execute that b**ch
@@ -501,11 +501,10 @@ namespace PokemonTCG
            }
 			
            //Tell the player to select an active pokemon
-
            Console.WriteLine("Please select an active pokemon");
 
            //Call the overloaded chooseCard method which will iterate the cards in the source (bench)
-           currentPlayer.setACTPKM(currentPlayer.chooseCard(currentPlayer.Bench));
+           currentPlayer.setACTPKM(currentPlayer.chooseCard(currentPlayer.Bench)); 
 
            //choosecard method will be launched before the setActPKM command
            currentPlayer.isFirstTurn = false;

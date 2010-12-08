@@ -454,6 +454,20 @@ namespace PokemonTCG
             //Draw seven cards
 			currentPlayer.draw(7);
 			
+			//Check that the user got some basics in the draw
+            //While the current player doesn't have any basics in their hand
+			while(!(currentPlayer.Hand.Exists(p => p.stage == Enums.Stage.Basic)))
+            {
+					Console.WriteLine("You have no basic cards in your hand; a new hand will be drawn");
+					currentPlayer.deck.AddRange(currentPlayer.Hand);
+                    currentPlayer.Hand.Clear();
+                    currentPlayer.draw(7);
+		
+                    //Offer player 2 two more cards 
+                    //TODO: ^
+			}
+				   
+			
 			//Place Prizes
 			currentPlayer.initPrizes(6);
 						
@@ -727,6 +741,22 @@ namespace PokemonTCG
 			}
 			return stage;
 		}
+		
+		/*
+		//Fisher-Yates Shuffle
+		public static void Shuffle<T>(this IList<T> list)  
+		{  
+    		Random rng = new Random();  
+    		int n = list.Count;  
+    		while (n > 1) {  
+        		n--;  
+        		int k = rng.Next(n + 1);  
+        		T value = list[k];  
+        		list[k] = list[n];  
+        		list[n] = value;  
+    		}  
+		}
+         * */
 		
 		private static Enums.Element parseType(string strType)
 		{

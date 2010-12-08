@@ -17,6 +17,7 @@ namespace PokemonTCG
         public List<Card> Bench = new List<Card>(5);
         public List<Card> Discarded = new List<Card>(60);
 		public List<Card> Prizes = new List<Card>(6);
+		
 
 		//Turn use variables
 		public Card actPkm;
@@ -31,7 +32,7 @@ namespace PokemonTCG
         private Card temp;
         private string deckpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "decks" + Path.DirectorySeparatorChar;
 		private string deckname;
-        private Deck deck;
+        public Deck deck;
         public bool isFirstTurn = true;
         public bool pickPKM = false;
 		public bool isFirstEnergy = false;
@@ -350,6 +351,13 @@ namespace PokemonTCG
 			{
 				Console.WriteLine("You have no enegeries in your hand");
 			}
+		}
+		
+		//Predicates 
+		
+		public bool isBasic(Card c)
+		{
+			return (c.stage == Enums.Stage.Basic);
 		}
 		
 		public bool isStage(Card c, Enums.Stage stage)

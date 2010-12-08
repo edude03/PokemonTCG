@@ -443,7 +443,9 @@ namespace PokemonTCG
 				break;               
 			} 
 		} while (!done);
+            //Reset the turn variables 
 				curPlayer.hasDrawn = false;
+                curPlayer.isFirstEnergy = true;
 		}
 
         public static void setup(Player currentPlayer)

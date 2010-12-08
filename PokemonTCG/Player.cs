@@ -35,7 +35,7 @@ namespace PokemonTCG
         public Deck deck;
         public bool isFirstTurn = true;
         public bool pickPKM = false;
-		public bool isFirstEnergy = false;
+		public bool isFirstEnergy = true;
 
         //Player may get a key section for encrypting and decryting keys
      

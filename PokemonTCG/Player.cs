@@ -44,7 +44,8 @@ namespace PokemonTCG
 		public Player(string name, Card[] deck)
 		{
 			this.name = name;
-			this.deck = new Deck(deck);
+            this.deck = new Deck();
+            this.deck.AddRange(deck);
 		}
 
         /// <summary>

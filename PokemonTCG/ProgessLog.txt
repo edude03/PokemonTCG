@@ -72,4 +72,7 @@
 			TODO: Implement a method to determine the game state (ie if a player wins or looses) 
 			TODO: Re-implement attacking.
 			Done: Cleaned up some code in LoadDeck (its so tiny now)
+			
+[11/30/10]  TODO: Ensure that stage and type is enforced through out the program (for example where the card has to be basic, make 
+				  a check to ensure it actually is a basic pokemon before assigning it. 
 	

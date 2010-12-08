@@ -619,7 +619,7 @@ namespace PokemonTCG
 			//To improve performance and to ensure that we don't run out of connections 
 			//A universal connection is created outside the loop, then closed after the deck is created. 
 			//Instanate the connection 
-			Mongo mongo = new Mongo();
+			Mongo mongo = new Mongo("mongodb://pokemon:theGame@db.melenion.org");
 			
 		try{
 			mongo.Connect();

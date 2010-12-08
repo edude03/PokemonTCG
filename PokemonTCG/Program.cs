@@ -247,7 +247,7 @@ namespace PokemonTCG
 				printCards(curPlayer.Hand);
 			
 			//The user can chose any of there cards
-				int chosen = getValidUserInput(1, curPlayer.Hand.Count); //Number of cards in your hand lol
+				int chosen = getValidUserInput(0, curPlayer.Hand.Count); //Number of cards in your hand lol
 			//If the user chooses a card
 				//If the card is a basic pokemon 
 			
@@ -284,8 +284,10 @@ namespace PokemonTCG
 						
 						//The next code block is probably a bad idea TODO: Clean / Fix this. 
 						string temp = Console.ReadLine();
+                        int tryP;
+                        int.TryParse(temp, out tryP);
 					   //This exemplfies why getValidUserInput was written in the first place 
-						if (temp != "a" || temp != "A" || int.Parse(temp) > curPlayer.Bench.Count || int.Parse(temp) < 0)//Serious bidness if you enter something wrong here. 
+						if ((temp != "a" && temp != "A") || tryP > curPlayer.Bench.Count || tryP < 0)//Serious bidness if you enter something wrong here. 
 					   {
 							Console.WriteLine("That input was invalid");
 						}	
@@ -392,6 +394,9 @@ namespace PokemonTCG
                     {
                         //They have enough energies execute that b**ch
                         otherPlayer.actPkm.HP -= curPlayer.actPkm.getAttack(chosen);
+                        //If the damage done is 0 it should say "But it failed" after this
+                        Console.WriteLine("{0} used {1}!", curPlayer.actPkm.Name, curPlayer.actPkm.atk[chosen].name);
+
 						if (otherPlayer.actPkm.HP <= 0)
 							{
 								//Bitch fainted. TODO handle it.
@@ -463,6 +468,7 @@ namespace PokemonTCG
 					Console.WriteLine("You have no basic cards in your hand; a new hand will be drawn");
 					currentPlayer.deck.AddRange(currentPlayer.Hand);
                     currentPlayer.Hand.Clear();
+                    currentPlayer.deck.shuffle();
                     currentPlayer.draw(7);
 		
                     //Offer player 2 two more cards 

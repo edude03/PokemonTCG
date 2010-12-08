@@ -322,6 +322,7 @@ namespace PokemonTCG
 		
 		public void attachEnergy(Card c, List<Card> source)
 		{
+			//Predicate is a method that will return true or flase based on the passed in input
 			Predicate<Card> energy = new Predicate<Card>(isEnergy);
 			//If an energy card exists in the source:
 			if(source.Exists(energy))
@@ -349,6 +350,12 @@ namespace PokemonTCG
 			{
 				Console.WriteLine("You have no enegeries in your hand");
 			}
+		}
+		
+		public bool isStage(Card c, Enums.Stage stage)
+		{
+			//Return whatever this expression evaluates to (true or false)
+			return (c.stage == stage);
 		}
 			              
 		private bool isEnergy(Card c)

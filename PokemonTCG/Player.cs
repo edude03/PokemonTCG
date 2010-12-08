@@ -70,19 +70,19 @@ namespace PokemonTCG
 			}
 
             //Instanate the deck
-            this.deck = new Deck(deckpath, deckname);
+            //this.deck = new Deck(deckpath, deckname);
             
             //Make sure the deck is nice and shuffled
             for (int i = 0; i < 7; i++)
             {
-                deck.Shuffle();
+                //deck.Shuffle();
             }
             
             //Need to draw 7 cards for the hand
             //If there are less than 7 cards in the deck
-            if (deck.Size < 7)
+            if (deck.Count < 7)
             {
-                for (int i = 0; i < deck.Size; i++)
+                for (int i = 0; i < deck.Count; i++)
                 {
                     //Draw all the cards in the deck
                     this.Hand.Add(deck.draw());
@@ -117,7 +117,7 @@ namespace PokemonTCG
 		
 		public void shuffleDeck()
 		{
-			deck.Shuffle();
+			deck.shuffle();
 		}
 
         /// <summary>
@@ -258,11 +258,8 @@ namespace PokemonTCG
 		//TODO: Write this method
 		public void reset()
 		{
-			//Move all the cards from the Deck 
-			while (Discarded[0] != null)
-			{
-				this.deck.add(Discarded[0]);
-			}
+            this.deck.AddRange(Discarded);
+            Discarded.Clear();
 			
 		}
 		

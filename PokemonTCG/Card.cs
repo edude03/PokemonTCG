@@ -175,6 +175,7 @@ namespace PokemonTCG
 
         public bool meetsCrit(List<Pair> specs)
         {
+            int totalEng = 0; 
             foreach (Pair i in specs)
             {
 				
@@ -185,6 +186,15 @@ namespace PokemonTCG
 				 * If you noticed that this is run in a foreach loop, it is because we need to evaluate wheather or not all requirements are met 
 				 * for example if 2 water and 5 leaf are needed, we evaluate the number of cards that are leaf and see if its enough then we evaluate
 				 * wether or not there are enough water to meet the requirements. If both checks pass the loop exists with a return true */
+                if (i.type == Enums.Element.Colorless)
+                {
+                    //If there isn't enough energies to satisfy the requirements 
+                    if (!(attached.FindAll(delegate(Card c) { return c.stage == Enums.Stage.Energy; }).Count >= i.value))
+                    {
+                        return false;
+                    }
+                    continue;
+                }
 				if (!(attached.FindAll(delegate(Card c) { return c.type == i.type; }).Count >= i.value))
 					//FindAll the cards; pass them into the delegate for matching; compare the number of results 
 					//to the number required (passed in via params pair (which is the number (i) of type (type) required. 

@@ -186,58 +186,5 @@ namespace PokemonTCG
             this.info = info.Substring(fName + 2);
         }
 
-        public bool meetsReqs (List<Pair> reqs, List<Card> attached)
-        {
-            foreach (Pair p in reqs)
-            {
-                //Find p in the calling pokemon attached array
-
-                //Loop through attached
-                if (!find(p,attached)) //If find returns false
-                {
-                    //Cleans up after the find method before exiting
-                    foreach (Energy e in attached)
-                    {
-                        e.found = false;
-                    }
-                    return false;
-                }
-
-            } //if it exits the foreach loop then the required cards where found
-
-
-            //Cleans up after the find method before exiting
-            foreach (Energy e in attached)
-            {
-                e.found = false;
-            }
-            
-            //If it made it this far then everything should be good
-            return true;
-        }
-        
-        /// <summary>
-        /// Find the Card of type and value listed in the pair P
-        /// </summary>
-        /// <param name="p">A Value,Type Pair</param>
-        /// <param name="attached">A list of cards</param>
-        /// <returns>Boolean based on wheter or not the card was found</returns>
-        private bool find(Pair p, List<Card> attached)
-        {
-            foreach (Energy e in attached)
-            {
-                if (e.type == p.type)
-                {
-                    //Makes sure if the loop is repeated its not counted twice
-                    e.found = true;
-
-                    //If it finds a matching energy exit the loop and return true
-                    return true;
-                }
-            }
-            //If the for loop doesn't find a match, then return false
-            return false;
-        }
-
-    }
+	}
 }

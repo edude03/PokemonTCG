@@ -33,9 +33,11 @@ namespace PokemonTCG
         public string Resistance;
 		public int retreatCost; 
         public Enums.Element type;
-        public Enums.Condition Status; //TODO: ensure that you can have mutliple statuses at the same time. 
+        public Enums.Condition Status; //TODO: ensure that you can have mutliple statuses at the same time. See: flags
         public List<Card> attached = new List<Card>();
         public Attack[] atk = new Attack[2];
+        public string[] evol;
+
         
         //For the attack parser
         
@@ -228,7 +230,7 @@ namespace PokemonTCG
 		}
 		
 		//Proper card method.
-		public Card(int BOGUS_ID, string name, int HP, string stage, string Weakness, string Resistance, string type, Attack[] atk)
+		public Card(int BOGUS_ID, string name, int HP, string stage, string Weakness, string Resistance, string type, Attack[] atk, string[] evol)
 		{
 			this.BOGUS_ID = BOGUS_ID;
 	       	this.Name = name;
@@ -238,12 +240,25 @@ namespace PokemonTCG
 	        this.Resistance = Resistance;
 	        this.Type = type;
 	        this.atk = atk;
+            this.evol = evol;
 	        
 		}
 		
         public string getName()
         {
             return this.Name;
+        }
+
+        public bool validEvol(string input)
+        {
+            //If the input matches any of the Evolutions in this card array return true
+            foreach (string e in this.evol)
+            {
+                //TODO: ensure special cases are matched. 
+                if (e == input) //Need to make this more robust?
+                    return true;
+            }
+            return false;
         }
 
         //Methods
@@ -293,7 +308,6 @@ namespace PokemonTCG
 
 
         }
-
         public void parseEnergy(string info)
         {
             List<Pair> requirements = new List<Pair>();

@@ -124,11 +124,11 @@ namespace PokemonTCG
         /// Calls the deck 
         /// </summary>
         /// <returns></returns>
-        public Card draw()
+        public bool draw(out Card draw)
         {
-            return deck.draw();
+            Card tmp;
+            return deck.draw(tmp);
         }
-		
 		//Overloaded because eventually you should be able to draw your own prize
 		public Card drawPrize(int i)
 		{

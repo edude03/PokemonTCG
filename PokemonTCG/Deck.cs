@@ -13,14 +13,26 @@ namespace PokemonTCG
     {
         Random rng = new Random();
         //Custom Method(s)
-        public Card draw()
+        public bool draw(out Card draw)
         {
-            //Returns the top card.
-            Card temp = this[0];
-            this.RemoveAt(0);
-            return temp;
+            if (this.Count > 0)
+            {
+                //Returns the top card.
+                draw = this[0];
+                this.RemoveAt(0);
+                return true;
+            }
+            draw = null;
+            return false;   
         }
         public void shuffle() { shuffle(this); }
+		
+		/// <summary>
+		/// Shuffles a list of objects 
+		/// </summary>
+		/// <param name="list">
+		/// A <see cref="List<Card>"/>
+		/// </param>
         public void shuffle(List<Card> list)
         {
            

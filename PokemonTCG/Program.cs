@@ -12,6 +12,9 @@ using PokemonTCG.ServiceReference2;
 using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.VisualBasic;
 
+//Events
+
+
 namespace PokemonTCG
 {
     internal class Program
@@ -79,8 +82,10 @@ namespace PokemonTCG
 				setup(player2);
 				
 				//Get the game started.
-				gameLoop(player1,player2);
+				gameLoop(player1, player2);
 			}
+
+
 			//TODO: Make the game continue if this is thrown
 			catch (NotImplementedException e)
 			{
@@ -106,7 +111,6 @@ namespace PokemonTCG
                     {
                         break;
                     }
-
                     TCGMenu(player2, player1);
                 } while (gameInPlay);
 
@@ -167,7 +171,7 @@ namespace PokemonTCG
                 int i = 0;
                 for (; i < aryFi.Length; i++)
                 {
-                    Console.WriteLine(i + ": " + aryFi[i].Name);
+                    Console.WriteLine("{0}: {1}", i, aryFi[i].Name);
                 }
                 //for future use
                 //Console.WriteLine((i + 1) + " : [Randomly Generated]");

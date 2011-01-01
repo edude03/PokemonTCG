@@ -63,7 +63,7 @@
 			removed old Menu
 			implemented TCGMenu. 
 			stage two of energy support
-			TODO: Evolutins
+			TODO: Evolutions
 			TODO: energy testing.
 			
 [11/29/10]  Done: Cleaned up firstTurn, fixed mongo crash (sort of), some other stuff that I won't remember till I do the git commit in a minute. 
@@ -75,4 +75,12 @@
 			
 [11/30/10]  TODO: Ensure that stage and type is enforced through out the program (for example where the card has to be basic, make 
 				  a check to ensure it actually is a basic pokemon before assigning it. 
+
+[12/08/10] See GIT log for changes. 
+		   TODO: Debug MongoDB Query speed.
+
+[12/20/10] TODO: Change card id to hashing
+		   TODO: 
+
+[12/31/10] TODO: Convert BOGUS_ID to GUID and convert the BOGUS_ID type to a string. 
 	

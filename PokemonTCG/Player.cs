@@ -270,7 +270,6 @@ namespace PokemonTCG
 		{
             this.deck.AddRange(Discarded);
             Discarded.Clear();
-			
 		}
 		
 		//Add randomly drawn prizes to the Prizes list. 

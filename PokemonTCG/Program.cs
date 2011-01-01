@@ -227,9 +227,9 @@ namespace PokemonTCG
 			int i = 0;
 			foreach (Card c in input)
 			{
-				i++;
 				Console.Write("{0}: {1} ", i, c.Name);
 				Console.Write("\n");
+				i++;
 			}
 		}
 		

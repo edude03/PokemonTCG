@@ -318,7 +318,14 @@ namespace PokemonTCG
 				else
 				{
 					//Check if it is an evolution and allow the user to change it out?
-					Console.WriteLine("Sorry, I'm still working on evolutions as well ;_;"); //TODO: Write evolution code 
+					Console.WriteLine("Sorry, I'm still working on evolutions as well ;_;"); //TODO: Write evolution code
+                    int evolT = choosecard(curPlayer.Hand);
+                    
+                    //If the chose card is a valid evolution
+                    if (curPlayer.validEvol(curPlayer.actPkm, curPlayer.Hand[evolT]))
+                    {
+                        curPlayer.doEvol(curPlayer.Hand, evolT);
+                    }
 				}
 			
 		}
@@ -695,7 +702,16 @@ namespace PokemonTCG
 			string Name = results["Name"].ToString();
 			string Stage = results["Stage"].ToString();
 			string Type = results["Type"].ToString();
-			Enums.Element type = parseType(Type);
+
+            //Evolutin code 
+            string[] evolInto = results["EvolvesFrom"].ToString().Split(',');
+            string[] evolFrom = results["EvolvesInto"].ToString().Split(',');
+           
+            //Give me the pokemon number or -1
+            int pNum = int.Parse((results["PokemonNumber"] ?? -1).ToString());
+			
+            
+            Enums.Element type = parseType(Type);
 			Enums.Stage stage = parseStage(Stage);
 			int HP = 0;
 			string Weakness = "";
@@ -724,7 +740,7 @@ namespace PokemonTCG
 				}
 			}
 			//Make sure to fix card to correct this issue. 
-			return new Card(BOGUS_ID, Name, HP, Stage, Weakness, Resistance, Type, atk); 
+            return new Card(BOGUS_ID, Name, HP, Stage, Weakness, Resistance, Type, atk, evolInto, evolFrom, pNum);
 		}
 		
 		//This is to keep the code working the same way until I get around to abstracting the Deck Card and player instanation methods. 

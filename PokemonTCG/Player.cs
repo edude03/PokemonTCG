@@ -26,6 +26,11 @@ namespace PokemonTCG
 		
         private string name;
 		
+        //Evolution use code
+        private List<Card> evoZone;
+
+        //Events 
+        public event EventHandler PKMFaint;
 
         
         private int counter = 0;

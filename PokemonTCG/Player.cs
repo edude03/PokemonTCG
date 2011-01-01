@@ -85,7 +85,9 @@ namespace PokemonTCG
                 for (int i = 0; i < deck.Count; i++)
                 {
                     //Draw all the cards in the deck
-                    this.Hand.Add(deck.draw());
+                    Card tmp;
+                    this.draw(out tmp);
+                    this.Hand.Add(tmp);
                 }
             }
             //Otherwise,
@@ -94,8 +96,9 @@ namespace PokemonTCG
 
                 for (int i = 0; i < 7; i++)
                 {
-                    //Draw 7 cards
-                    this.Hand.Add(deck.draw());
+                    Card tmp;
+                    this.draw(out tmp);
+                    this.Hand.Add(tmp);
                 }
             }
         }
@@ -105,7 +108,9 @@ namespace PokemonTCG
 		{
 		  for (int i=0; i < n; i++)
 		  {
-			this.Hand.Add(deck.draw());
+              Card tmp;
+              this.draw(out tmp);
+              this.Hand.Add(tmp);
 		  }
 		}
 		
@@ -126,8 +131,8 @@ namespace PokemonTCG
         /// <returns></returns>
         public bool draw(out Card draw)
         {
-            Card tmp;
-            return deck.draw(tmp);
+            bool tmpReturn = this.draw(out draw);
+            return tmpReturn;
         }
 		//Overloaded because eventually you should be able to draw your own prize
 		public Card drawPrize(int i)
@@ -268,7 +273,15 @@ namespace PokemonTCG
 		{
 			for (int i = 0; i < numOfPrizes; i++)
 			{
-				Prizes.Add(deck.draw());
+                Card tmp;
+                if (deck.draw(out tmp))
+                {
+                    Prizes.Add(tmp);
+                }
+                else
+                {
+                    //TODO" something if they are out of cards 
+                }
 			}
 		}
 		

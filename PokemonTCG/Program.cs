@@ -329,14 +329,20 @@ namespace PokemonTCG
 			if (curPlayer.hasDrawn == false)
 			{
 				//Deck will return the topmost card in the deck so add it to the Hand (straight forward)
-				curPlayer.Hand.Add(curPlayer.draw());
-				
+                Card tmp; //I hate temp variables but what can you do 
+                if (curPlayer.draw(out tmp))
+                {
+                    curPlayer.Hand.Add(tmp); //<-- If the player can't draw they lose (TODO: implement (proably using out)
+                }
+                else
+                {
+                    //Todo: What happens when the player looses
+                }
 				//Set player hasDrawn to true so that they don't draw again.
-				curPlayer.hasDrawn = true;
+				curPlayer.hasDrawn = true; //<--TODO: replace these with a state machine?
 				
 				//Print the name of the card they drew.
 				Console.WriteLine("{0} drew {1}", curPlayer.getName(), curPlayer.getLastCard().Name);
-
 			}
 				
 			
@@ -408,14 +414,22 @@ namespace PokemonTCG
 								otherPlayer.discard(otherPlayer.actPkm); 
 								
 								//You get to draw a prize
-								curPlayer.Hand.Add(curPlayer.drawPrize());
+								if (curPlayer.Prizes.Count > 0)
+								{
+									curPlayer.Hand.Add(curPlayer.drawPrize());
+								}
+								else
+								{
+									//You win
+									gameInPlay = false;
+									Console.WriteLine("You win {0}!", curPlayer.getName());
+								}
 								
 								//If the other player doesn't have any cards on their bench 
 								if (otherPlayer.Bench.Count == 0)
 								{
 									//You win.
 									gameInPlay = false;
-									
 									Console.WriteLine("You win {0}!", curPlayer.getName());
 								}
 								//else do nothing but end the turn

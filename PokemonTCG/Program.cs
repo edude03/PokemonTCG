@@ -692,6 +692,12 @@ namespace PokemonTCG
 
 		}
 		
+        /// <summary>
+        /// Gets a card from the database
+        /// </summary>
+        /// <param name="BOGUS_ID">The ID of the card object to retreive</param>
+        /// <param name="mongo">the database object to use to get the results</param>
+        /// <returns>a Card object</returns>
 		public static Card getCardFromDB(int BOGUS_ID, Mongo mongo) 
 		{
 			Document query = new Document();

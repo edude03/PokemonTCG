@@ -583,12 +583,11 @@ namespace PokemonTCG
                 foreach (string s in itemsRead)
                 {
                     temp = int.Parse(s);
-                    if (!(temp < MIN | temp > MAX))
+                    if (!(temp < MIN | temp > MAX) & temp != 0)
                     {
                         intLoadDeck.Add(temp);
                     }
                 }
-
                 return intLoadDeck.ToArray();
             }
             catch

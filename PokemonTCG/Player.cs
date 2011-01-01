@@ -391,6 +391,61 @@ namespace PokemonTCG
 			//Else
 				return false; 
 		}
-		
+
+
+        //Evolution related code follows 
+        public bool validEvol(Card from, Card to)
+        {
+            foreach (int i in to.evolvesFrom)
+            {
+                if (i == from.pNum)
+                    return true;
+            }
+            //if none of the values of evolves from match the pokemon number of the card. 
+            return false;
+        }
+
+        private void doEvolCleanUp()
+        {
+            //All the cards that were previously put in the evoZone need to go to disposed
+            for (int i = 0; i < evoZone.Count; i++)
+            {
+                discard(evoZone, 0);
+            }
+        }
+
+       
+        //Really since you can only evolve from the active pokemon, only source and index are needed?
+        public void doEvol(List<Card> source, int sIndex)
+        {
+            //First: Move Attachments from old card to new card
+            //If there are cards attached
+            if (this.actPkm.attached.Count > 0)
+            {
+                //Move Attachments
+                for (int i = 0; i < this.actPkm.attached.Count; i++)
+                {
+                    //Call that super handy move method :P
+                    move(this.actPkm, evoZone);
+                }
+            }
+
+            //Second: Move old card to evoZone (A zone that exists under the top (activePKM) card
+            move(this.actPkm, evoZone);
+
+            //Third: Make 'to' the activePKM
+            setACTPKM(source[sIndex]);
+
+            //Forth: Bind the cleanup event. 
+            if (PKMFaint == null) //TODO: do a proper check since other methods can bind PKMFaint other than cleanup
+            {
+                PKMFaint += new EventHandler(Player_PKMFaint);
+            }
+        }
+
+        void Player_PKMFaint(object sender, EventArgs e)
+        {
+            doEvolCleanUp();
+        }
   }
 }

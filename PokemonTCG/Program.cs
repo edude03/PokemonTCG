@@ -528,7 +528,7 @@ namespace PokemonTCG
                else if (choosen == -1)
                {
                    bench = false;
-                   break; // TODO: might not be correct. Was : Exit While
+                   break;
                }
                Console.WriteLine("Would you like to put another card on the bench?");
                string inputCs = Console.ReadLine();

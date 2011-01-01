@@ -362,7 +362,7 @@ namespace PokemonTCG
 			switch (getValidUserInput(1,6))
             {
                 case 1: //If the user picks Hand
-				menu_Hand(curPlayer);
+					menu_Hand(curPlayer);
 				break;
 	
 				case 2: //If the user picks Check

@@ -36,7 +36,10 @@ namespace PokemonTCG
         public Enums.Condition Status; //TODO: ensure that you can have mutliple statuses at the same time. See: flags
         public List<Card> attached = new List<Card>();
         public Attack[] atk = new Attack[2];
-        public string[] evol;
+        public int[] evolvesInto;
+        public int[] evolvesFrom;
+        public int pNum; 
+
 
         
         //For the attack parser
@@ -230,35 +233,44 @@ namespace PokemonTCG
 		}
 		
 		//Proper card method.
-		public Card(int BOGUS_ID, string name, int HP, string stage, string Weakness, string Resistance, string type, Attack[] atk, string[] evol)
-		{
-			this.BOGUS_ID = BOGUS_ID;
-	       	this.Name = name;
-	        this.HP = HP;
-	        this.Stage = stage;
-	        this.Weakness = Weakness;
-	        this.Resistance = Resistance;
-	        this.Type = type;
-	        this.atk = atk;
-            this.evol = evol;
-	        
-		}
+        public Card(int BOGUS_ID, string name, int HP, string stage, string Weakness, string Resistance, string type, Attack[] atk, string[] evolvesInto, string[] evolvesFrom, int pNum)
+        {
+            this.BOGUS_ID = BOGUS_ID;
+            this.Name = name;
+            this.HP = HP;
+            this.Stage = stage;
+            this.Weakness = Weakness;
+            this.Resistance = Resistance;
+            this.Type = type;
+            this.atk = atk;
+
+            //Evolution parsers TODO: Just accept an Int array
+        }
 		
         public string getName()
         {
             return this.Name;
         }
 
-        public bool validEvol(string input)
+       
+
+        private int[] str2int(string[] input)
         {
-            //If the input matches any of the Evolutions in this card array return true
-            foreach (string e in this.evol)
+            int[] tmp = new int[input.Length];
+            try
             {
-                //TODO: ensure special cases are matched. 
-                if (e == input) //Need to make this more robust?
-                    return true;
+                for (int i = 0; i < input.Length; i++)
+                {
+                    tmp[i] = int.Parse(input[i]);
+                }
             }
-            return false;
+            catch (Exception e)
+            {
+                Console.WriteLine("There was an error parsing the evolutions");
+            }
+
+            return tmp;
+
         }
 
         //Methods

@@ -1,6 +1,0 @@
-C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\bin\Release\PokemonTCG.exe
-C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\bin\Release\PokemonTCG.pdb
-C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\obj\Release\ResolveAssemblyReference.cache
-C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\obj\Release\PokemonTCG.exe
-C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\obj\Release\PokemonTCG.pdb
-C:\Users\Michael\Documents\Visual Studio 2008\Projects\PokemonTCG\PokemonTCG\bin\Release\Doc.xml

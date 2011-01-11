@@ -24,6 +24,7 @@ namespace PokemonTCG
             Paralyzed,
             Sleep,
             Faint,
+            Confused,
         }
 
        

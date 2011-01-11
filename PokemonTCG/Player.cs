@@ -107,8 +107,10 @@ namespace PokemonTCG
                 }
             }
         }
-       
 		
+        /// <summary>
+        /// Takes the top input from the deck and returns it to the calling method.
+        /// </summary>
 		public void draw(int n)
 		{
 		  for (int i=0; i < n; i++)
@@ -118,13 +120,10 @@ namespace PokemonTCG
               this.Hand.Add(tmp);
 		  }
 		}
-		
-
-        /// <summary>
-        /// Takes the top card from the deck and passes it to the calling method.
-        /// </summary>
        
-		
+        /// <summary>
+        /// Shuffles the deck
+        /// </summary>
 		public void shuffleDeck()
 		{
 			deck.shuffle();
@@ -136,42 +135,52 @@ namespace PokemonTCG
         /// <returns></returns>
         public bool draw(out Card draw)
         {
-            bool tmpReturn = this.draw(out draw);
+            bool tmpReturn = deck.draw(out draw);
             return tmpReturn;
         }
-		//Overloaded because eventually you should be able to draw your own prize
-		public Card drawPrize(int i)
+
+        //Overloaded because eventually you should be able to draw your own prize
+        #region drawPrize
+        /// <summary>
+		/// Draws a perticular prize. 
+		/// </summary>
+		/// <param name="i">The index of the prize you want to draw</param>
+		/// <returns>The selected card</returns>
+        public Card drawPrize(int i)
 		{
-			//Store the card safely befoe we remove it
+			//Store the input safely befoe we remove it
 			Card temp = this.Prizes[i];
 			
-			//Remove the card from the prizes
+			//Remove the input from the prizes
 			this.Prizes.RemoveAt(i); 
 			
 			//Return it to the calling method
 			return temp;
 		}
 		
-		
+        /// <summary>
+        /// Draws a card from the prizes
+        /// </summary>
+        /// <returns>The next prize</returns>
 		public Card drawPrize()
 		{
-			//Returns the first card in prizes. 
+			//Returns the first input in prizes. 
 			return drawPrize(0); 
 		}
-		
-        
+        #endregion
+
         /// <summary>
-        /// Returns the last card that was added to the List so that information 
+        /// Returns the last input that was added to the List so that information 
         /// may be extracted from it
         /// </summary>
-        /// <returns>The last card drawn</returns>
+        /// <returns>The last input drawn</returns>
         public Card getLastCard()
         {
             return (Card)Hand[Hand.Count -1];
         }
 
         /// <summary>
-        /// Puts the card that was passed in into the discarded array.
+        /// Puts the input that was passed in into the discarded array.
         /// </summary>
         public void discard(List<Card> source, int index)
         {
@@ -184,11 +193,6 @@ namespace PokemonTCG
 			//Probably passing in the actPKM in this case
 			move(c, Discarded);
 		}
-
-        public void setACTPKM(Card card)
-        {
-            this.actPkm = card;
-        }
 
 		//This is a repeat of makeActPKM?	
         public void addCard(Card card)
@@ -214,7 +218,7 @@ namespace PokemonTCG
         }
 
         /// <summary>
-        /// Allows the user to choose a card from the hand List
+        /// Allows the user to choose a input from the hand List
         /// </summary>
         /// <returns>The choosen Card</returns>
         public Card chooseCard()
@@ -226,30 +230,30 @@ namespace PokemonTCG
         /// Presents a menu with the availible cards in the source list
         /// </summary>
         /// <param name="source">A List</param>
-        /// <returns>A card</returns>
+        /// <returns>A input</returns>
         public Card chooseCard(List<Card> source)
         {
             /* Get choosecard to show us the cards in Hand,
-             * use the index it returns to get that card and store it temporarly
-             * Remove that card from hand and return it to the calling method
+             * use the index it returns to get that input and store it temporarly
+             * Remove that input from hand and return it to the calling method
              */
 
-            int intTemp = Program.choosecard(source);
+            int intTemp = gInstance.choosecard(source);
             temp = source[intTemp];
             source.RemoveAt(intTemp);
             return temp;
         }
 
         /// <summary>
-        /// Check if the card the calling method wants is valid,
-        /// if it is, the card is removed from the source list and
+        /// Check if the input the calling method wants is valid,
+        /// if it is, the input is removed from the source list and
         /// returned
         /// </summary>
-        /// <param name="index">The index of the card in question</param>
-        /// <returns>The chosen card or null if there is an error</returns>
+        /// <param name="index">The index of the input in question</param>
+        /// <returns>The chosen input or null if there is an error</returns>
         public Card chooseCard(int index)
         {
-            //Check if the card it wants is valid
+            //Check if the input it wants is valid
             if (Hand[index] != null)
             {
                 temp = Hand[index];
@@ -259,7 +263,7 @@ namespace PokemonTCG
             else
             {
                 //Someway to tell the calling method this is not vaild
-                //Since the contrustor isn't called, it will return a card that is null
+                //Since the contrustor isn't called, it will return a input that is null
                 return null;
             }
         }
@@ -289,7 +293,7 @@ namespace PokemonTCG
 			}
 		}
 		
-		//This method seems useless however it is also used for active pokemon which is a card type instead of a list
+		//This method seems useless however it is also used for active pokemon which is a input type instead of a list
 		//Therefore it's usefull there. 
 		public void move(Card c, List<Card> dest)
 		{
@@ -303,7 +307,6 @@ namespace PokemonTCG
 			source.RemoveAt(index);
 		}
 		
-		
 		//Realized you can only retreat the actPKm so no point having parameters :P
 		public bool retreat() //Todo: Fix this method; it assumes that the only thing that can be attached is energies. 
 		{					  
@@ -313,10 +316,10 @@ namespace PokemonTCG
 				//If it can remove the number of cards from the attached
 				for (int i = 0; i < actPkm.retreatCost; i++)
 				{
-					move(actPkm.attached, 0, Discarded); //Move the first card from the attached array to discarded. 
+					move(actPkm.attached, 0, Discarded); //Move the first input from the attached array to discarded. 
 				}
 				
-				//Move the card to the bench
+				//Move the input to the bench
 				move(actPkm, Bench); 
 				actPkm = null;
 				
@@ -329,21 +332,20 @@ namespace PokemonTCG
 				
 		}
 		
-		public void makeActPkm(List<Card> input, int index)
+		public void setActPkm(List<Card> input, int index)
 		{
 			this.actPkm = input[index];
 			input.RemoveAt(index);
 		}
 		
-		
 		public void attachEnergy(Card c, List<Card> source)
 		{
 			//Predicate is a method that will return true or flase based on the passed in input
 			Predicate<Card> energy = new Predicate<Card>(isEnergy);
-			//If an energy card exists in the source:
+			//If an energy input exists in the source:
 			if(source.Exists(energy))
 			{
-				//Keeps track of the index of the card in the array 
+				//Keeps track of the index of the input in the array 
 				int i = 0;
 				//Keeps track of the number of energies in the players hand.
 				int j = 0;
@@ -359,7 +361,7 @@ namespace PokemonTCG
 						Console.WriteLine("{0}: {1}", i, lCard.Name);
 					}
 				}
-				chosen = Program.getValidUserInput(0,j);
+				chosen = gInstance.getValidUserInput(0,j);
 				move(source, chosen, c.attached);
 			}
 			else
@@ -367,10 +369,10 @@ namespace PokemonTCG
 				Console.WriteLine("You have no enegeries in your hand");
 			}
 		}
-		
-		//Predicates 
-		
-		public bool isBasic(Card c)
+
+        //Predicates 
+        #region Predicates
+        public bool isBasic(Card c)
 		{
 			return (c.stage == Enums.Stage.Basic);
 		}
@@ -390,9 +392,16 @@ namespace PokemonTCG
 			//Else
 				return false; 
 		}
+        #endregion
 
-
-        //Evolution related code follows 
+        //Evolution related code follows
+        #region Evolution_Code
+        /// <summary>
+        /// Checks that the evolution is valid
+        /// </summary>
+        /// <param name="from">The card that is in play</param>
+        /// <param name="to">The card you want to evolve to</param>
+        /// <returns>True or false</returns>
         public bool validEvol(Card from, Card to)
         {
             foreach (int i in to.evolvesFrom)
@@ -400,10 +409,13 @@ namespace PokemonTCG
                 if (i == from.pNum)
                     return true;
             }
-            //if none of the values of evolves from match the pokemon number of the card. 
+            //if none of the values of evolves from match the pokemon number of the input. 
             return false;
         }
 
+        /// <summary>
+        /// disposes of the cards that were in play before the evolution. 
+        /// </summary>
         private void doEvolCleanUp()
         {
             //All the cards that were previously put in the evoZone need to go to disposed
@@ -417,7 +429,7 @@ namespace PokemonTCG
         //Really since you can only evolve from the active pokemon, only source and index are needed?
         public void doEvol(List<Card> source, int sIndex)
         {
-            //First: Move Attachments from old card to new card
+            //First: Move Attachments from old input to new input
             //If there are cards attached
             if (this.actPkm.attached.Count > 0)
             {
@@ -429,13 +441,15 @@ namespace PokemonTCG
                 }
             }
 
-            //Second: Move old card to evoZone (A zone that exists under the top (activePKM) card
+            //Second: Move old input to evoZone (A zone that exists under the top (activePKM) input
             move(this.actPkm, evoZone);
 
             //Third: Make 'to' the activePKM
-            setACTPKM(source[sIndex]);
+            setActPkm(source,sIndex);
 
             //Forth: Bind the cleanup event. 
+            //If the PKMFaint doesn't have any events bound to it, bind PKMFaint.
+            //This needs to be fixed because if another event has bound to faint then the evoZone won't get cle
             if (PKMFaint == null) //TODO: do a proper check since other methods can bind PKMFaint other than cleanup
             {
                 PKMFaint += new EventHandler(Player_PKMFaint);
@@ -446,5 +460,6 @@ namespace PokemonTCG
         {
             doEvolCleanUp();
         }
-  }
+        #endregion
+    }
 }

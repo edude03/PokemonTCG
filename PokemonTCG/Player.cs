@@ -67,7 +67,7 @@ namespace PokemonTCG
             //Choose A Deck file
 			try
 			{
-				this.deckname = Program.chooseDeck(deckpath);
+				this.deckname = gInstance.chooseDeck(deckpath);
 			}
 			catch (myExceptions.DeckNotFoundException e)
 			{

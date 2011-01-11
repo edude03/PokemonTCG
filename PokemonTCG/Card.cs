@@ -69,12 +69,12 @@ namespace PokemonTCG
 							}
 							else if (value.Contains("Level Up"))
 							{
-								throw new myExceptions.InvalidDeckException("Unhandled card type loaded! (\"Level Up\")");
+								throw new myExceptions.InvalidDeckException("Unhandled input type loaded! (\"Level Up\")");
 							}
 							else
 							{
 								Console.WriteLine("What?");
-								throw new myExceptions.InvalidDeckException("An invalid card was loaded");
+								throw new myExceptions.InvalidDeckException("An invalid input was loaded");
 							}
 							break;
 					}
@@ -184,7 +184,7 @@ namespace PokemonTCG
             foreach (Pair i in specs)
             {
 				
-				/* This code finds all instances of Card, then Findall uses a delegate to compare wethere or not the found card is equal to 
+				/* This code finds all instances of Card, then Findall uses a delegate to compare wethere or not the found input is equal to 
 				 * the requested requirement. Now we take a count of the returned vaules and if that value is not greater than or equal to 
 				 * the number of cards we need we return false. 
 				 * 
@@ -211,28 +211,28 @@ namespace PokemonTCG
         }
 		
 		//TODO: Fix cards to not be initalized on construtor call?
-		//TODO: Make card (or its int method) accept a database object and the BOGUS_ID to allow the DB to be opened and closed outside the loop
+		//TODO: Make input (or its int method) accept a database object and the BOGUS_ID to allow the DB to be opened and closed outside the loop
 		//TODO: make a generic database access method instead of mongo
         //Constructor
         /// <summary>
         /// The Constructor for Card,
         /// </summary>
-        /// <param name="BOGUS_ID">Bogus_ID is the ID value associated with a card in the database</param>
-        /// <param name="mongo">Is the database object which card uses to get the data</param>
+        /// <param name="BOGUS_ID">Bogus_ID is the ID value associated with a input in the database</param>
+        /// <param name="mongo">Is the database object which input uses to get the data</param>
         public Card(int BOGUS_ID, Mongo mongo)
         {
 			//Incase I forgot to remove this from something else
 			//throw System.NotImplementedException; 
 		}
 		
-		//Overloaded card constructor, does nothing apparently 
+		//Overloaded input constructor, does nothing apparently 
 		//TODO: Fix energy class that references this. 
 		public Card(int BOGUS_ID)
 		{
 			
 		}
 		
-		//Proper card method.
+		//Proper input method.
         public Card(int BOGUS_ID, string name, int HP, string stage, string Weakness, string Resistance, string type, Attack[] atk, string[] evolvesInto, string[] evolvesFrom, int pNum)
         {
             this.BOGUS_ID = BOGUS_ID;
@@ -266,7 +266,7 @@ namespace PokemonTCG
             }
             catch (Exception e)
             {
-                Console.WriteLine("There was an error parsing the evolutions");
+                Console.WriteLine("There was an error parsing the evolutions: {0}", e.Message);
             }
 
             return tmp;

@@ -41,12 +41,13 @@ namespace PokemonTCG
         public bool isFirstTurn = true;
         public bool pickPKM = false;
 		public bool isFirstEnergy = true;
+        Game gInstance; 
 
         //Player may get a key section for encrypting and decryting keys
      
         //Methods
-		
-		public Player(string name, Card[] deck)
+        //Constructor
+		public Player(string name, Card[] deck, Game gInst)
 		{
 			this.name = name;
             this.deck = new Deck();
@@ -58,7 +59,7 @@ namespace PokemonTCG
         /// Shuffles it 7 times, and adds 7 cards to it
         /// </summary>
         /// <param name="name">The Name of the player</param>
-        public Player(string name)
+        public Player(string name, Game gInst)
         {
             //Set up the properties for the Lists
            

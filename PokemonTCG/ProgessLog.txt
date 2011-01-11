@@ -80,7 +80,9 @@
 		   TODO: Debug MongoDB Query speed.
 
 [12/20/10] TODO: Change card id to hashing
-		   TODO: 
-
+		   
 [12/31/10] TODO: Convert BOGUS_ID to GUID and convert the BOGUS_ID type to a string. 
-	
+
+[1/9/2011] TODO: Implement Status effects
+		   TODO: Implement weaknesses 
+		   TODO: Refactor Game to move gameloop out to program, thus properly fixing the new game bug. 

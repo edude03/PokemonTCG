@@ -17,7 +17,7 @@ namespace PokemonTCG
         {
             if (this.Count > 0)
             {
-                //Returns the top card.
+                //Returns the top input.
                 draw = this[0];
                 this.RemoveAt(0);
                 return true;

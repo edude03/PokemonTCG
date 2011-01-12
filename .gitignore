@@ -14,3 +14,4 @@ _ReSharper.*
 #for Mono
 *.usertasks
 *.userprefs
+.DS_Store

@@ -14,6 +14,7 @@ using Microsoft.Scripting.Hosting;
 
 namespace PokemonTCG
 {
+    
     public class Game
     {
         //Variables
@@ -186,6 +187,10 @@ namespace PokemonTCG
             } while (playAgain);
         }
 
+
+        #region dataAccess
+            
+
         /// <summary>
         /// Gets a input from the database
         /// </summary>
@@ -256,6 +261,7 @@ namespace PokemonTCG
             string status = c.Name + " || HP: " + c.HP + " Status: " + c.Status;
             return status;
         }
+#endregion
 
         /// <summary>
         /// Makes sure the input is within the bounds. 

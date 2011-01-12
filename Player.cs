@@ -31,7 +31,6 @@ namespace PokemonTCG
 
         //Events 
         public event EventHandler PKMFaint;
-
         
         private Card temp;
         private string deckpath = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "decks" + Path.DirectorySeparatorChar;

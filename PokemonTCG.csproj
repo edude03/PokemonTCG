@@ -109,7 +109,6 @@
   <ItemGroup>
     <Compile Include="Attack.cs" />
     <Compile Include="Card.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Content\EventAggregator.cs" />
     <Compile Include="Deck.cs" />
     <Compile Include="Energy.cs" />

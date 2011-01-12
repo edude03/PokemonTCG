@@ -34,7 +34,6 @@ namespace PokemonTCG
                     case Enums.Condition.Faint:
                         break;
                     case Enums.Condition.Paralyzed:
-                
                         break;
                     case Enums.Condition.Confused:
                         status = value; 
@@ -54,7 +53,7 @@ namespace PokemonTCG
 
         public void burn(Card input)
         {
-            //If tails, zero is heads by convention
+            //If tails. zero is tails by convention
             if (flipCoin() == 0)
             {
                 input.HP -= 20;

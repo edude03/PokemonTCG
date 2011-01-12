@@ -392,46 +392,6 @@ namespace PokemonTCG
 
         public void Main()
         {
-            //Use bubble up catches
-            try
-            {
-                Console.WriteLine("Please Select a Game mode");
-                Console.WriteLine("(1) Networked");
-                Console.WriteLine("(2) Offline Multiplayer");
-                Console.WriteLine("(3) Vs Computer");
-                string mode;
-
-                bool validMode = false;
-
-                // keep taking user input until a valid mode is selected (ie. validMode == true)
-                do
-                {
-                    mode = Console.ReadLine();
-
-                    //Might get an Format exception here
-                    switch ((Enums.gameType)int.Parse(mode))
-                    {
-                        case Enums.gameType.Networked:
-                            Console.WriteLine("Sorry, this feature had yet to be implemented");
-                            break;
-                        /* Network Game Pseudo Code
-                               * 1) Pick port and ipaddress
-                               * 2) See if a connection can be made,
-                               * 3) Exchange Player Objects
-                               * 4) Start exchanging Lua Scripts
-                               */
-                        case Enums.gameType.Offline:
-                            validMode = true;
-                            break;
-                        case Enums.gameType.Computer:
-                            Console.WriteLine("Sorry, this feature had yet to be implemented");
-                            break;
-                        default:
-                            Console.WriteLine("Sorry, you must select one of the options.");
-                            break;
-                    }
-                } while (validMode == false);
-
                 //Get the players name and set them up
                 Console.WriteLine("Please enter your name Player 1");
                 string input = Console.ReadLine();

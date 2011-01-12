@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Melenion Debelopment Studios Inc")]
 [assembly: AssemblyProduct("PokemonTCG")]
-[assembly: AssemblyCopyright("Copyright © Melenion Development Studios 2008")]
+[assembly: AssemblyCopyright("Copyright © Melenion Development Studios 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

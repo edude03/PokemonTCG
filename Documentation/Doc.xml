@@ -4,92 +4,11 @@
         <name>PokemonTCG</name>
     </assembly>
     <members>
-        <member name="M:PokemonTCG.Card.#ctor(System.Int32,MongoDB.Mongo)">
+        <member name="M:PokemonTCG.Game.getCardFromDB(System.Int32,PokemonTCG.IDataStore)">
             <summary>
-            The Constructor for Card,
+            Gets a input from the database
             </summary>
-            <param name="BOGUS_ID">Bogus_ID is the ID value associated with a card in the database</param>
-            <param name="mongo">Is the database object which card uses to get the data</param>
-        </member>
-        <member name="M:PokemonTCG.Card.getAttack(System.Int32)">
-            <summary>
-            Overloaded Method for getAttack; returns the amount of damage that an attack does
-            </summary>
-            <param name="atk">An integer related to which attack to execute</param>
-            <returns>The amount of damanage an attack does</returns>
-        </member>
-        <member name="F:PokemonTCG.Player.Hand">
-            Card arrays, write encapsulated methods for possibly
-        </member>
-        <member name="M:PokemonTCG.Player.#ctor(System.String,PokemonTCG.Game)">
-            <summary>
-            Creates a new "player", sets the name, Loads the players deck
-            Shuffles it 7 times, and adds 7 cards to it
-            </summary>
-            <param name="name">The Name of the player</param>
-        </member>
-        <member name="M:PokemonTCG.Player.shuffleDeck">
-            <summary>
-            Takes the top card from the deck and passes it to the calling method.
-            </summary>
-        </member>
-        <member name="M:PokemonTCG.Player.draw(PokemonTCG.Card@)">
-            <summary>
-            Calls the deck 
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:PokemonTCG.Player.getLastCard">
-            <summary>
-            Returns the last card that was added to the List so that information 
-            may be extracted from it
-            </summary>
-            <returns>The last card drawn</returns>
-        </member>
-        <member name="M:PokemonTCG.Player.discard(System.Collections.Generic.List{PokemonTCG.Card},System.Int32)">
-            <summary>
-            Puts the card that was passed in into the discarded array.
-            </summary>
-        </member>
-        <member name="M:PokemonTCG.Player.DiscardHand">
-            <summary>
-            Removes all cards from the hand List
-            </summary>
-        </member>
-        <member name="M:PokemonTCG.Player.getName">
-            <summary>
-            Ecapsulated method
-            </summary>
-            <returns>The players name</returns>
-        </member>
-        <member name="M:PokemonTCG.Player.chooseCard">
-            <summary>
-            Allows the user to choose a card from the hand List
-            </summary>
-            <returns>The choosen Card</returns>
-        </member>
-        <member name="M:PokemonTCG.Player.chooseCard(System.Collections.Generic.List{PokemonTCG.Card})">
-            <summary>
-            Presents a menu with the availible cards in the source list
-            </summary>
-            <param name="source">A List</param>
-            <returns>A card</returns>
-        </member>
-        <member name="M:PokemonTCG.Player.chooseCard(System.Int32)">
-            <summary>
-            Check if the card the calling method wants is valid,
-            if it is, the card is removed from the source list and
-            returned
-            </summary>
-            <param name="index">The index of the card in question</param>
-            <returns>The chosen card or null if there is an error</returns>
-        </member>
-        <!-- Badly formed XML comment ignored for member "M:PokemonTCG.Deck.shuffle(System.Collections.Generic.List{PokemonTCG.Card})" -->
-        <member name="M:PokemonTCG.Game.getCardFromDB(System.Int32,MongoDB.Mongo)">
-            <summary>
-            Gets a card from the database
-            </summary>
-            <param name="BOGUS_ID">The ID of the card object to retreive</param>
+            <param name="BOGUS_ID">The ID of the input object to retreive</param>
             <param name="mongo">the database object to use to get the results</param>
             <returns>a Card object</returns>
         </member>
@@ -108,5 +27,117 @@
             </returns>
             Might cause a fenchpost error but I'll look into that later TODO: fix this issue.
         </member>
+        <member name="M:PokemonTCG.Card.#ctor(System.Int32,PokemonTCG.IDataStore)">
+            <summary>
+            The Constructor for Card,
+            </summary>
+            <param name="BOGUS_ID">Bogus_ID is the ID value associated with a input in the database</param>
+            <param name="mongo">Is the database object which input uses to get the data</param>
+        </member>
+        <member name="M:PokemonTCG.Card.getAttack(System.Int32)">
+            <summary>
+            Overloaded Method for getAttack; returns the amount of damage that an attack does
+            </summary>
+            <param name="atk">An integer related to which attack to execute</param>
+            <returns>The amount of damanage an attack does</returns>
+        </member>
+        <member name="F:PokemonTCG.Player.Hand">
+            Card arrays, write encapsulated methods for possibly
+        </member>
+        <member name="M:PokemonTCG.Player.#ctor(System.String,PokemonTCG.Game)">
+            <summary>
+            Creates a new "player", sets the name, Loads the players deck
+            Shuffles it 7 times, and adds 7 cards to it
+            </summary>
+            <param name="name">The Name of the player</param>
+        </member>
+        <member name="M:PokemonTCG.Player.draw(System.Int32)">
+            <summary>
+            Takes the top input from the deck and returns it to the calling method.
+            </summary>
+        </member>
+        <member name="M:PokemonTCG.Player.shuffleDeck">
+            <summary>
+            Shuffles the deck
+            </summary>
+        </member>
+        <member name="M:PokemonTCG.Player.draw(PokemonTCG.Card@)">
+            <summary>
+            Calls the deck 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PokemonTCG.Player.drawPrize(System.Int32)">
+            <summary>
+            Draws a perticular prize. 
+            </summary>
+            <param name="i">The index of the prize you want to draw</param>
+            <returns>The selected card</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.drawPrize">
+            <summary>
+            Draws a card from the prizes
+            </summary>
+            <returns>The next prize</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.getLastCard">
+            <summary>
+            Returns the last input that was added to the List so that information 
+            may be extracted from it
+            </summary>
+            <returns>The last input drawn</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.discard(System.Collections.Generic.List{PokemonTCG.Card},System.Int32)">
+            <summary>
+            Puts the input that was passed in into the discarded array.
+            </summary>
+        </member>
+        <member name="M:PokemonTCG.Player.DiscardHand">
+            <summary>
+            Removes all cards from the hand List
+            </summary>
+        </member>
+        <member name="M:PokemonTCG.Player.getName">
+            <summary>
+            Ecapsulated method
+            </summary>
+            <returns>The players name</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.chooseCard">
+            <summary>
+            Allows the user to choose a input from the hand List
+            </summary>
+            <returns>The choosen Card</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.chooseCard(System.Collections.Generic.List{PokemonTCG.Card})">
+            <summary>
+            Presents a menu with the availible cards in the source list
+            </summary>
+            <param name="source">A List</param>
+            <returns>A input</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.chooseCard(System.Int32)">
+            <summary>
+            Check if the input the calling method wants is valid,
+            if it is, the input is removed from the source list and
+            returned
+            </summary>
+            <param name="index">The index of the input in question</param>
+            <returns>The chosen input or null if there is an error</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.validEvol(PokemonTCG.Card,PokemonTCG.Card)">
+            <summary>
+            Checks that the evolution is valid
+            </summary>
+            <param name="from">The card that is in play</param>
+            <param name="to">The card you want to evolve to</param>
+            <returns>True or false</returns>
+        </member>
+        <member name="M:PokemonTCG.Player.doEvolCleanUp">
+            <summary>
+            disposes of the cards that were in play before the evolution. 
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:PokemonTCG.Deck.shuffle(System.Collections.Generic.List{PokemonTCG.Card})" -->
     </members>
 </doc>

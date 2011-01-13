@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Data.OleDb;
 using System.Data;
 using MongoDB;
-using MongoDB.Configuration;
+
 
 
 //Remove visualbasic code in the furture
@@ -219,7 +219,7 @@ namespace PokemonTCG
         /// </summary>
         /// <param name="BOGUS_ID">Bogus_ID is the ID value associated with a input in the database</param>
         /// <param name="mongo">Is the database object which input uses to get the data</param>
-        public Card(int BOGUS_ID, Mongo mongo)
+        public Card(int BOGUS_ID, IDataStore database)
         {
 			//Incase I forgot to remove this from something else
 			//throw System.NotImplementedException; 

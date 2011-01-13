@@ -5,12 +5,17 @@ using System.Data.OleDb;
 using System.Data;
 using System.Collections;
 using System.Reflection;
+
+//Mongo Stuff
 using MongoDB;
+using MongoDB.Bson;
+using PokemonTCG.DataStore;
 
 //IronPython Stuff
 using IronPython.Hosting;
 using IronPython.Runtime;
 using Microsoft.Scripting.Hosting;
+
 
 namespace PokemonTCG
 {
@@ -197,12 +202,19 @@ namespace PokemonTCG
         /// <param name="BOGUS_ID">The ID of the input object to retreive</param>
         /// <param name="mongo">the database object to use to get the results</param>
         /// <returns>a Card object</returns>
-        public Card getCardFromDB(int BOGUS_ID, Mongo mongo)
+        public Card getCardFromDB(int BOGUS_ID, IDataStore database)
         {
+            
+            #region oldCode 
+            /*
+            Document query = new Document(
+            
+            
+            Cursor cq = new Cursor();
+            c
 
-            Document query = new Document();
-            query["BOGUS_ID"] = BOGUS_ID;
-            Document results = mongo["pokemon"]["cards"].FindOne(query);
+            query["BOGUS_ID"] = "$in" + BOGUS_ID;
+            Document results = mongo["pokemon"]["cards"].Find(
 
             //TODO: Convert the strings to their proper type internally 
             string Name = results["Name"].ToString();
@@ -253,6 +265,12 @@ namespace PokemonTCG
             }
             //Make sure to fix input to correct this issue. 
             return new Card(BOGUS_ID, Name, HP, Stage, Weakness, Resistance, Type, atk, evolInto, evolFrom, pNum);
+
+             * */
+            #endregion
+            database.connect();
+            return database.getCardbyID(BOGUS_ID);
+
         }
 
         //This might be a confusing name, since status like burn and such need to be implemented as well
@@ -262,6 +280,7 @@ namespace PokemonTCG
             return status;
         }
 #endregion
+             
 
         /// <summary>
         /// Makes sure the input is within the bounds. 
@@ -316,30 +335,21 @@ namespace PokemonTCG
             //To improve performance and to ensure that we don't run out of connections 
             //A universal connection is created outside the loop, then closed after the deck is created. 
             //Instanate the connection 
-            Mongo mongo = new Mongo("mongodb://pokemon:theGame@db.melenion.org");
+            MongoDataStore ms = new MongoDataStore();
 
             try
             {
-                mongo.Connect();
-
-                for (int k = 0; k < Size; k++)
-                {
-                    deck[k] = getCardFromDB(intDeck[k], mongo);
-                }
-
-                //Close the connection
+                ms.connect();
+                deck = ms.getCardArray(intDeck).ToArray(); //TODO: Figure out why this method (intArrayDeck) returns a Card array instead of a list?
             }
-            catch (MongoDB.MongoConnectionException)
+            catch (Exception e)
             {
                 Console.WriteLine("Error: Unable to connect to the database, please try again.");
                 deck = null;
                 System.Environment.Exit(-1);
             }
-            finally
-            {
-                mongo.Disconnect();
-            }
-
+           
+            ms.disconnect();
             return deck;
 
         }
@@ -392,33 +402,19 @@ namespace PokemonTCG
 
         public void Main()
         {
-                //Get the players name and set them up
-                Console.WriteLine("Please enter your name Player 1");
-                string input = Console.ReadLine();
-                Player player1 = new Player(input, chainload(deckpath), this);
-                setup(player1);
+            //Get the players name and set them up
+            Console.WriteLine("Please enter your name Player 1");
+            string input = Console.ReadLine();
+            Player player1 = new Player(input, chainload(deckpath), this);
+            setup(player1);
 
-                Console.WriteLine("Please enter your name Player 2");
-                input = Console.ReadLine();
-                Player player2 = new Player(input, chainload(deckpath), this);
-                setup(player2);
+            Console.WriteLine("Please enter your name Player 2");
+            input = Console.ReadLine();
+            Player player2 = new Player(input, chainload(deckpath), this);
+            setup(player2);
 
-                //Get the game started.
-                gameLoop(player1, player2);
-            }
-
-
-            //TODO: Make the game continue if this is thrown
-            catch (NotImplementedException e)
-            {
-                Console.WriteLine("woops forgot to add code for {0}", e.ToString());
-                Console.ReadLine();
-            }
-            catch (FormatException e)
-            {
-                Console.WriteLine("Invalid game type. Exception: {0}", e.Message);
-                Console.Read();
-            }
+            //Get the game started.
+            gameLoop(player1, player2);
         }
 
         public void menu_Hand(Player curPlayer)
@@ -506,7 +502,7 @@ namespace PokemonTCG
 
         }
 
-        private Enums.Stage parseStage(string strStage)
+        public Enums.Stage parseStage(string strStage)
         {
             Enums.Stage stage;
             switch (strStage)
@@ -537,7 +533,7 @@ namespace PokemonTCG
             return stage;
         }
 
-        private Enums.Element parseType(string strType)
+        public Enums.Element parseType(string strType)
         {
             Enums.Element type;
             // some database entries have multiple space delimited types; only accept first type
